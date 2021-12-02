@@ -2,7 +2,8 @@
   "profiles": {
     "Rainbow": {
       "commandName": "Executable",
-      "executablePath": "e:\\Program Files\\Image-Line\\FL Studio 20\\FL64.exe"
+      "executablePath": "e:\\Program Files\\Image-Line\\FL Studio 20\\FL64.exe",
+      "nativeDebugging": true
     }
   }
 }

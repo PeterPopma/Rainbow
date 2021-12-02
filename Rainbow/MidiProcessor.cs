@@ -21,7 +21,6 @@
         public MidiProcessor(SynthGenerator synthGenerator)
         {
             this.synthGenerator = synthGenerator ?? throw new ArgumentNullException(nameof(synthGenerator));
-            synthGenerator.Initialize();
         }
 
         /// <summary>

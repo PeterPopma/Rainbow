@@ -86,7 +86,7 @@ namespace Rainbow.Wave
         // load a .wav file. Supported is PCM, mono/stereo, 8/16/24 bits, all samplerates.
         // loaded file is transformed into a 44100 Kz 16 bits stereo stream. 
         // if the source is mono, the data is copied to both streams
-        public static void LoadFromDisk(WaveInfo waveInfo, int samplesPerSecond)
+        public static void LoadFromDisk(WaveInfo waveInfo, int samplesPerSecond, ref float[] leftChannel, ref float[] rightChannel)
         {
             using (WaveFileReader reader = new WaveFileReader(waveInfo.WaveFileName))
             {
@@ -94,38 +94,38 @@ namespace Rainbow.Wave
                 int read = reader.Read(buffer, 0, buffer.Length);
                 double sampleRatio = samplesPerSecond / (double)reader.WaveFormat.SampleRate;
                 int numSamplesDestination = (int)(reader.SampleCount * sampleRatio);       // number of samples in final result (44100 * duration in s)
-                waveInfo.WaveFileDataLeft = new float[numSamplesDestination];            // output=2 channels
-                waveInfo.WaveFileDataRight = new float[numSamplesDestination];            // output=2 channels
+                leftChannel = new float[numSamplesDestination];            // output=2 channels
+                rightChannel = new float[numSamplesDestination];            // output=2 channels
 
                 for (int destSampleNumber = 0; destSampleNumber < numSamplesDestination; destSampleNumber++)
                 {
                     if (reader.WaveFormat.BitsPerSample == 8)
                     {
                         int position = reader.WaveFormat.Channels * (int)(destSampleNumber / sampleRatio);
-                        waveInfo.WaveFileDataLeft[destSampleNumber] = (short)((buffer[position] - 128) * 256);
+                        leftChannel[destSampleNumber] = (short)((buffer[position] - 128) * 256);
                         if (reader.WaveFormat.Channels == 2)
                         {
-                            waveInfo.WaveFileDataRight[destSampleNumber] = (short)((buffer[position + 1] - 128) * 256);
+                            rightChannel[destSampleNumber] = (short)((buffer[position + 1] - 128) * 256);
                         }
                         else
                         {
                             // use data of first channel for right channel
-                            waveInfo.WaveFileDataRight[destSampleNumber] = (short)((buffer[position] - 128) * 256);
+                            rightChannel[destSampleNumber] = (short)((buffer[position] - 128) * 256);
                         }
                     }
                     else if(reader.WaveFormat.BitsPerSample == 16)
                     // 16-bits audio
                     {
                         int positionInReadBuffer = 2 * reader.WaveFormat.Channels * (int)(destSampleNumber / sampleRatio);
-                        waveInfo.WaveFileDataLeft[destSampleNumber] = (float)(BitConverter.ToInt16(new byte[2] { buffer[positionInReadBuffer], buffer[positionInReadBuffer + 1] }, 0) / 32768.0);
+                        leftChannel[destSampleNumber] = (float)(BitConverter.ToInt16(new byte[2] { buffer[positionInReadBuffer], buffer[positionInReadBuffer + 1] }, 0) / 32768.0);
                         if (reader.WaveFormat.Channels == 2)
                         {
-                            waveInfo.WaveFileDataRight[destSampleNumber] = (float)(BitConverter.ToInt16(new byte[2] { buffer[positionInReadBuffer + 2], buffer[positionInReadBuffer + 3] }, 0) / 32768.0);
+                            rightChannel[destSampleNumber] = (float)(BitConverter.ToInt16(new byte[2] { buffer[positionInReadBuffer + 2], buffer[positionInReadBuffer + 3] }, 0) / 32768.0);
                         }
                         else
                         {
                             // use data of first channel for right channel
-                            waveInfo.WaveFileDataRight[destSampleNumber] = (float)(BitConverter.ToInt16(new byte[2] { buffer[positionInReadBuffer], buffer[positionInReadBuffer + 1] }, 0) / 32768.0);
+                            rightChannel[destSampleNumber] = (float)(BitConverter.ToInt16(new byte[2] { buffer[positionInReadBuffer], buffer[positionInReadBuffer + 1] }, 0) / 32768.0);
                         }
                     }
                     else if (reader.WaveFormat.BitsPerSample == 24)
@@ -135,17 +135,17 @@ namespace Rainbow.Wave
                         // Create smaller array in order to add the 4th 8-bit value
                         byte[] byteArrayLeft = new byte[4] { 0, buffer[positionInReadBuffer + 2], buffer[positionInReadBuffer + 1], buffer[positionInReadBuffer] };
 
-                        waveInfo.WaveFileDataLeft[destSampleNumber] = (float)(BitConverter.ToInt16(byteArrayLeft, 0) / 32768.0);
+                        leftChannel[destSampleNumber] = (float)(BitConverter.ToInt16(byteArrayLeft, 0) / 32768.0);
 
                         if (reader.WaveFormat.Channels == 2)
                         {
                             byte[] byteArrayRight = new byte[4] { 0, buffer[positionInReadBuffer + 5], buffer[positionInReadBuffer + 4], buffer[positionInReadBuffer + 3] };
-                            waveInfo.WaveFileDataRight[destSampleNumber] = (float)(BitConverter.ToInt16(byteArrayRight, 0) / 32768.0);
+                            rightChannel[destSampleNumber] = (float)(BitConverter.ToInt16(byteArrayRight, 0) / 32768.0);
                         }
                         else
                         {
                             // use data of first channel for right channel
-                            waveInfo.WaveFileDataRight[destSampleNumber] = (float)(BitConverter.ToInt16(byteArrayLeft, 0) / 32768.0);
+                            rightChannel[destSampleNumber] = (float)(BitConverter.ToInt16(byteArrayLeft, 0) / 32768.0);
                         }
                     }
                     else if (reader.WaveFormat.BitsPerSample == 32)
@@ -155,19 +155,19 @@ namespace Rainbow.Wave
                         byte[] byteArrayLeft = new byte[4] { buffer[positionInReadBuffer], buffer[positionInReadBuffer + 1], buffer[positionInReadBuffer + 2], buffer[positionInReadBuffer + 3] };
                         int intValue = BitConverter.ToInt32(byteArrayLeft, 0);
                         float floatValue = intValue / (float)Int32.MaxValue;
-                        waveInfo.WaveFileDataLeft[destSampleNumber] = floatValue;
+                        leftChannel[destSampleNumber] = floatValue;
                         
                         if (reader.WaveFormat.Channels == 2)
                         {
                             byte[] byteArrayRight = new byte[4] { buffer[positionInReadBuffer + 4], buffer[positionInReadBuffer + 5], buffer[positionInReadBuffer + 6], buffer[positionInReadBuffer + 7] };
                             intValue = BitConverter.ToInt32(byteArrayRight, 0);
                             floatValue = intValue / (float)Int32.MaxValue;
-                            waveInfo.WaveFileDataRight[destSampleNumber] = floatValue;
+                            rightChannel[destSampleNumber] = floatValue;
                         }
                         else
                         {
                             // use data of first channel for right channel
-                            waveInfo.WaveFileDataRight[destSampleNumber] = floatValue;
+                            rightChannel[destSampleNumber] = floatValue;
                         }
 
                     }

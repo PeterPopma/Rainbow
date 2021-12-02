@@ -1,37 +1,41 @@
 ﻿using Jacobi.Vst.Core;
-using NAudio.Wave;
 using Rainbow.UI;
 using Rainbow.Wave;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Media;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rainbow.Synth
 {
     class SynthGenerator
     {
-        WaveInfo currentWave = new WaveInfo();
+        WaveInfo waveInfo = new WaveInfo();
         private int samplesPerSecond = 44100;
         private int bitsPerSample = 32;
-        private string dataFolder = "";
         private double repeatBegin = 0.05;
         private double repeatEnd = 0.4;
         private List<Note> notes = new List<Note>();
+        private float effectOne = 0;
+        public const int SHAPE_NUMPOINTS = 1000;
+        public const int SHAPE_MAX_VALUE = 500;
 
-        public string DataFolder { get => dataFolder; set => dataFolder = value; }
-        internal WaveInfo CurrentWave { get => currentWave; set => currentWave = value; }
+        internal WaveInfo WaveInfo { get => waveInfo; set => waveInfo = value; }
         internal FormMain? MainView { get; set; }
         public double RepeatBegin { get => repeatBegin; set => repeatBegin = value; }
         public double RepeatEnd { get => repeatEnd; set => repeatEnd = value; }
         internal List<Note> Notes { get => notes; set => notes = value; }
+        public float EffectOne { get => effectOne; set => effectOne = value; }
 
         public SynthGenerator()
         {
+        }
+
+        public void Initialize()
+        {
+            waveInfo.ShapeVolume = new int[SHAPE_NUMPOINTS];
+            for(int k=0; k<SHAPE_NUMPOINTS; k++)
+            {
+                waveInfo.ShapeVolume[k] = SHAPE_MAX_VALUE;
+            }
         }
 
         public void NoteOff(byte tone)
@@ -49,52 +53,127 @@ namespace Rainbow.Synth
             Notes.Add(note);
         }
 
-        public void Initialize()
+        public void LoadWaveFile(string dataFolder, string wavefileName)
         {
-            /*
-            // find all presets
-            try
-            {
-                string[] fileEntries = Directory.GetFiles("presets\\");
-                foreach (string fileName in fileEntries)
-                {
-                    if (fileName.EndsWith(".pst"))
-                    {
-                        string name = fileName.Substring(8, fileName.Length - 12);
-                        string category = Preset.ReadCategory(name);
-                        PresetItem presetItem = new PresetItem(name, category);
-                        presets.Add(presetItem);
-                        if (currentPreset == null)        // set first preset
-                        {
-                            currentPreset = presetItem;
-                            labelPreset.Text = name;
-                            Preset.Load(SynthGenerator, name);
-                        }
-                    }
-                }
-            }
-            catch (System.IO.DirectoryNotFoundException)
-            {
-                Directory.CreateDirectory("presets");
-            }
-            */
-
-            //            currentWave.WaveFileName = dataFolder + "\\wavefiles\\bell2.wav";
-            //            currentWave.WaveFileName = dataFolder + "\\wavefiles\\horn2.wav"; 
-            //            WaveFile.SaveToDisk(currentWave, samplesPerSecond, bitsPerSample);
-            //GenerateSynthData(36);
+            WaveInfo.WaveFileName = dataFolder + "\\wavefiles\\" + wavefileName + ".wav";
+            float[] leftChannel = null, rightChannel = null;
+            WaveFile.LoadFromDisk(waveInfo, samplesPerSecond, ref leftChannel, ref rightChannel);
+            waveInfo.WaveFileDataLeft = leftChannel;
+            waveInfo.WaveFileDataLeft = rightChannel;
         }
 
-        public void LoadWaveFile(string wavefile)
+        public void LoadSecondaryWaveFile(string dataFolder, string wavefileName)
         {
-            CurrentWave.WaveFileName = dataFolder + "\\wavefiles\\" + wavefile + ".wav";
-            WaveFile.LoadFromDisk(currentWave, samplesPerSecond);
+            WaveInfo.WaveFileName = dataFolder + "\\wavefiles\\" + wavefileName + ".wav";
+            float[] leftChannel = null, rightChannel = null;
+            if (wavefileName.Equals("[None]"))
+            {
+                waveInfo.WaveFileSecondaryLeft = null;
+                waveInfo.WaveFileSecondaryRight = null;
+            }
+            else
+            {
+                WaveFile.LoadFromDisk(waveInfo, samplesPerSecond, ref leftChannel, ref rightChannel);
+                waveInfo.WaveFileSecondaryLeft = leftChannel;
+                waveInfo.WaveFileSecondaryRight = rightChannel;
+            }
         }
 
         public void SaveAsWaveFile()
         {
-            WaveFile.SaveToDisk(CurrentWave, samplesPerSecond, bitsPerSample);
+            WaveFile.SaveToDisk(WaveInfo, samplesPerSecond, bitsPerSample);
         }
+
+        // call when Preset settings changed (but when .wav files change, call LoadWaveFile first)
+        public void UpdateEffects()
+        {
+            WaveInfo.WaveDataLeft = UpdateEffects(WaveInfo.WaveFileDataLeft, WaveInfo.WaveFileSecondaryLeft);
+            WaveInfo.WaveDataRight = UpdateEffects(WaveInfo.WaveFileDataRight, WaveInfo.WaveFileSecondaryRight);
+        }
+
+        public float[] UpdateEffects(float[] sourceData, float[] sourceDataSecondary)
+        {
+            if (sourceDataSecondary!=null)
+            {
+                float[] mixedData = new float[Math.Max(sourceData.Length, sourceDataSecondary.Length)];
+                for (long k=0; k<mixedData.Length; k++)
+                {
+                    float percentageComplete = k / (float)mixedData.Length;
+                    mixedData[k] = 0;
+                    if (k < sourceData.Length-1)
+                    {
+                        mixedData[k] = sourceData[k] * (1-percentageComplete);
+                    }
+                    if (k >= mixedData.Length - sourceDataSecondary.Length)
+                    {
+                        mixedData[k] += sourceDataSecondary[k - mixedData.Length + sourceDataSecondary.Length] * percentageComplete;
+                    }
+                }
+
+                sourceData = mixedData;     // replace by mixed sound
+            }
+
+            float[] destData = new float[sourceData.Length];
+
+            for (int numSample = 0; numSample<sourceData.Length; numSample++)
+            {
+                float effectOneValue = numSample % effectOne;
+
+                if (effectOne!=0)
+                {
+                    destData[numSample] = (float)(sourceData[numSample] * (1 + effectOneValue / effectOne));
+                }
+                else
+                {
+                    destData[numSample] = sourceData[numSample];
+                }
+            }
+
+            ApplyVolume(destData);
+            Normalize(destData);
+
+            return destData;
+        }
+
+        private void ApplyVolume(float[] waveData)
+        {
+            for (int numSample = 0; numSample < waveData.Length; numSample++)
+            {
+                int currentPosition = (int)(SHAPE_NUMPOINTS * numSample / (float)waveData.Length);
+                if(currentPosition<0 || currentPosition>=SHAPE_NUMPOINTS)
+                {
+                    int pp = 0;
+                }
+                else
+                {
+                    waveData[numSample] = waveData[numSample] * waveInfo.ShapeVolume[currentPosition] / (float)SHAPE_MAX_VALUE;
+                }
+            }
+        }
+
+        private void Normalize(float[] waveData)
+        {
+            float lowerBand = float.MaxValue, upperBand = float.MinValue;
+            for (int numSample = 0; numSample < waveData.Length; numSample++)
+            {
+                if (waveData[numSample] < lowerBand)
+                {
+                    lowerBand = waveData[numSample];
+                }
+                if (waveData[numSample] > upperBand)
+                {
+                    upperBand = waveData[numSample];
+                }
+            }
+            float range = upperBand - lowerBand;
+            float scaleFactor = 2 / range;
+            float adjustValue = -1 - (lowerBand * scaleFactor);       // adjustValue + (lowerband * scaleFactor) must be -1, so adjustValue = -1 - (lowerband * scaleFactor)
+            for (int numSample = 0; numSample < waveData.Length; numSample++)
+            {
+                waveData[numSample] = waveData[numSample] * scaleFactor + adjustValue;
+            }
+        }
+        
 
         public void Play(VstAudioBuffer[] vstAudioBuffers)
         {
@@ -112,20 +191,20 @@ namespace Rainbow.Synth
                         highestVelocity = note.Velocity;
                     }
                     note.PlayPosition += note.FrequencyFactor;
-                    if (note.PlayPosition > CurrentWave.WaveFileDataLeft.Length * repeatEnd && note.Active)
+                    if (note.PlayPosition > WaveInfo.WaveDataLeft.Length * repeatEnd && note.Active)
                     {
-                        note.PlayPosition = CurrentWave.WaveFileDataLeft.Length * repeatBegin;
+                        note.PlayPosition = WaveInfo.WaveDataLeft.Length * repeatBegin;
 //                        System.Diagnostics.Debug.WriteLine("rewind:" + note.Tone);
                     }
                     int position = (int)note.PlayPosition;
-                    if (position >= CurrentWave.WaveFileDataLeft.Length)
+                    if (position >= WaveInfo.WaveFileDataLeft.Length)
                     {
                         Notes.RemoveAll(r => r.Tone == note.Tone);
                     }
                     else
                     {
-                        tempDataLeft += Convert.ToDouble(CurrentWave.WaveFileDataLeft[position]) * note.Velocity;
-                        tempDataRight += Convert.ToDouble(CurrentWave.WaveFileDataLeft[position]) * note.Velocity;
+                        tempDataLeft += Convert.ToDouble(WaveInfo.WaveDataLeft[position]) * note.Velocity;
+                        tempDataRight += Convert.ToDouble(WaveInfo.WaveDataLeft[position]) * note.Velocity;
                         totalVelocity += note.Velocity;
                     }
                 }

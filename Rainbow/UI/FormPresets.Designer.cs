@@ -47,7 +47,7 @@
             this.gradientButtonCancel.UseVisualStyleBackColor = false;
             this.gradientButtonCancel.Click += new System.EventHandler(this.gradientButtonCancel_Click);
             // 
-            // FormWaves
+            // FormPresets
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.SystemColors.Control;
@@ -58,12 +58,12 @@
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "FormWaves";
+            this.Name = "FormPresets";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MapNoteDetails_FormClosed);
-            this.Load += new System.EventHandler(this.MapNoteDetails_Load);
+            this.Load += new System.EventHandler(this.FormPresets_Load);
             this.ResumeLayout(false);
 
         }

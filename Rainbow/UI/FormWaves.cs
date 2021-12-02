@@ -12,8 +12,10 @@ namespace Rainbow.UI
     internal sealed partial class FormWaves : Form
     {
         private FormMain myParent = null;
+        private bool isSecondary = false;
 
         public FormMain MyParent { get => myParent; set => myParent = value; }
+        public bool IsSecondary { get => isSecondary; set => isSecondary = value; }
 
         /// <summary>
         /// Constructs a new instance.
@@ -46,7 +48,14 @@ namespace Rainbow.UI
         {
             GradientButton2 myButton = (GradientButton2)sender;
             Cursor = Cursors.WaitCursor;
-            myParent.setWaveFile(myButton.Text);
+            if (isSecondary)
+            {
+                myParent.setSecondaryWaveFile(myButton.Text);
+            }
+            else
+            {
+                myParent.setWaveFile(myButton.Text);
+            }
             Cursor = Cursors.Default;
             Close();
         }
@@ -56,6 +65,21 @@ namespace Rainbow.UI
         {
             int x = 20;
             int y = 20;
+            if(isSecondary)
+            {
+                GradientButton2 button = new GradientButton2();
+                button.Left = x;
+                button.Top = y;
+                button.Text = "[None]";
+                button.Width = 120;
+                button.ForeColor = Color.White;
+                button.Active = true;
+                button.Font = new Font("Serif", 8.25f, FontStyle.Bold);
+                button.FlatStyle = FlatStyle.Standard;
+                button.Click += new EventHandler(wavefilebutton_Click);
+                Controls.Add(button);
+                x += button.Width + 8;
+            }
             foreach (string wavefileName in myParent.WavefileNames)
             {
                 if (x > Width - 130)       // next row of presets
