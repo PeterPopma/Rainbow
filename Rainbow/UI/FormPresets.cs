@@ -69,7 +69,7 @@ namespace Rainbow.UI
 
         private void FormPresets_Load(object sender, EventArgs e)
         {
-            List<string> categories = myParent.GetAllCategories();
+            List<string> categories = myParent.GetAllPresetCategories();
             int x = 20;
             int[] y = new int[] { 20, 20 };
             for (int i = 0; i < categories.Count; i++)
@@ -87,7 +87,7 @@ namespace Rainbow.UI
                 label.Width = Width / 2 - 40;
                 Controls.Add(label);
                 y[i % 2] += label.Height + 4;
-                foreach (PresetItem presetItem in myParent.Presets)
+                foreach (CategoryItem presetItem in myParent.Presets)
                 {
                     if (presetItem.Category.Equals(category))
                     {

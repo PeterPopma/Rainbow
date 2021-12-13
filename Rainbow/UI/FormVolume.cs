@@ -14,6 +14,7 @@ namespace Rainbow.UI
     public partial class FormVolume : Form
     {
         private FormMain myParent = null;
+        private bool isSecondarySound;
 
         private int[] WaveData = new int[SynthGenerator.SHAPE_NUMPOINTS];
         bool isMouseButtonDown = false;
@@ -23,6 +24,7 @@ namespace Rainbow.UI
         Random random = new Random();
 
         internal FormMain MyParent { get => myParent; set => myParent = value; }
+        public bool IsSecondarySound { get => isSecondarySound; set => isSecondarySound = value; }
 
         public FormVolume()
         {
@@ -97,16 +99,28 @@ namespace Rainbow.UI
 
         private void buttonApply_Click(object sender, EventArgs e)
         {
-            MyParent.SynthGenerator.WaveInfo.ShapeVolume = new int[SynthGenerator.SHAPE_NUMPOINTS];
-            for (int i = 0; i < WaveData.Length; i++)
+            if (isSecondarySound)
             {
-                // Note that graph is upside-down
-                MyParent.SynthGenerator.WaveInfo.ShapeVolume[i] = SynthGenerator.SHAPE_MAX_VALUE - WaveData[i];
+                MyParent.SynthGenerator.WaveInfo.ShapeVolume2 = new int[SynthGenerator.SHAPE_NUMPOINTS];
+                for (int i = 0; i < WaveData.Length; i++)
+                {
+                    // Note that graph is upside-down
+                    MyParent.SynthGenerator.WaveInfo.ShapeVolume2[i] = SynthGenerator.SHAPE_MAX_VALUE - WaveData[i];
+                }
+                MyParent.pictureBoxVolume2.Refresh();
             }
-            MyParent.pictureBoxVolumeShape.Refresh();
-            MyParent.SynthGenerator.UpdateEffects();
-            MyParent.pictureBoxVolumeShape.Refresh();
+            else
+            {
+                MyParent.SynthGenerator.WaveInfo.ShapeVolume1 = new int[SynthGenerator.SHAPE_NUMPOINTS];
+                for (int i = 0; i < WaveData.Length; i++)
+                {
+                    // Note that graph is upside-down
+                    MyParent.SynthGenerator.WaveInfo.ShapeVolume1[i] = SynthGenerator.SHAPE_MAX_VALUE - WaveData[i];
+                }
+                MyParent.pictureBoxVolume1.Refresh();
+            }
 
+            MyParent.SynthGenerator.UpdateEffects();
             Close();
         }
 
@@ -201,7 +215,13 @@ namespace Rainbow.UI
 
         private void FormVolume_Load(object sender, EventArgs e)
         {
-            if (MyParent.SynthGenerator.WaveInfo.ShapeVolume.Length < SynthGenerator.SHAPE_NUMPOINTS)     // No data yet
+            int[] shapeVolume = MyParent.SynthGenerator.WaveInfo.ShapeVolume1;
+            if (isSecondarySound)
+            {
+                shapeVolume = MyParent.SynthGenerator.WaveInfo.ShapeVolume2;
+            }
+
+            if (shapeVolume.Length < SynthGenerator.SHAPE_NUMPOINTS)     // No data yet
             {
                 for (int i = 0; i < WaveData.Length; i++)
                 {
@@ -212,7 +232,7 @@ namespace Rainbow.UI
             {
                 for (int i = 0; i < WaveData.Length; i++)
                 {
-                    WaveData[i] = SynthGenerator.SHAPE_MAX_VALUE - MyParent.SynthGenerator.WaveInfo.ShapeVolume[i];
+                    WaveData[i] = SynthGenerator.SHAPE_MAX_VALUE - shapeVolume[i];
                 }
             }
 

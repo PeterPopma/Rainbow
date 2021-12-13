@@ -17,10 +17,13 @@
     <Compile Update="Custom Controls\GradientListBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="UI\FormAddPreset.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="UI\FormMain.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="UI\FormAddPreset.cs">
+    <Compile Update="UI\FormStretchMode.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="UI\FormVolume.cs">

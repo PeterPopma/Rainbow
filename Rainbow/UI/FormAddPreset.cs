@@ -49,7 +49,7 @@ namespace Rainbow.UI
             }
             if (textBoxPresetName.Text.Length > 0)
             {
-                PresetItem presetItem = new PresetItem(textBoxPresetName.Text, category);
+                CategoryItem presetItem = new CategoryItem(textBoxPresetName.Text, category);
                 myParent.Presets.Add(presetItem);
                 myParent.CurrentPreset = presetItem;
                 myParent.labelPreset.Text = presetItem.Name;
@@ -68,7 +68,7 @@ namespace Rainbow.UI
         private void FormAddPreset_Load(object sender, EventArgs e)
         {
             comboBoxCategories.Items.Clear();
-            List<string> categories = myParent.GetAllCategories();
+            List<string> categories = myParent.GetAllPresetCategories();
             comboBoxCategories.Items.AddRange(categories.ToArray());
         }
     }

@@ -1,5 +1,7 @@
 ﻿using Rainbow.CustomControls;
+using Rainbow.Synth;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -50,11 +52,11 @@ namespace Rainbow.UI
             Cursor = Cursors.WaitCursor;
             if (isSecondary)
             {
-                myParent.setSecondaryWaveFile(myButton.Text);
+                myParent.setSecondaryWaveFile(myButton.Category);
             }
             else
             {
-                myParent.setWaveFile(myButton.Text);
+                myParent.setWaveFile(myButton.Category);
             }
             Cursor = Cursors.Default;
             Close();
@@ -63,43 +65,54 @@ namespace Rainbow.UI
 
         private void FormWaves_Load(object sender, EventArgs e)
         {
-            int x = 20;
-            int y = 20;
-            if(isSecondary)
-            {
-                GradientButton2 button = new GradientButton2();
-                button.Left = x;
-                button.Top = y;
-                button.Text = "[None]";
-                button.Width = 120;
-                button.ForeColor = Color.White;
-                button.Active = true;
-                button.Font = new Font("Serif", 8.25f, FontStyle.Bold);
-                button.FlatStyle = FlatStyle.Standard;
-                button.Click += new EventHandler(wavefilebutton_Click);
-                Controls.Add(button);
-                x += button.Width + 8;
-            }
-            foreach (string wavefileName in myParent.WavefileNames)
-            {
-                if (x > Width - 130)       // next row of presets
-                {
-                    y += 30;
-                    x = 20;
-                }
-                GradientButton2 button = new GradientButton2();
-                button.Left = x;
-                button.Top = y;
-                button.Text = wavefileName;
-                button.Width = 120;
-                button.ForeColor = Color.White;
-                button.Font = new Font("Serif", 8.25f, FontStyle.Bold);
-                button.FlatStyle = FlatStyle.Standard;
-                button.Click += new EventHandler(wavefilebutton_Click);
-                Controls.Add(button);
-                x += button.Width + 8;
-            }
+            int x = 2;
+            int[] y = new int[] { 2, 2 };
 
+            List<string> categories = myParent.GetAllWaveFileCategories();
+            for (int i = 0; i < categories.Count; i++)
+            {
+                string category = categories[i];
+                int x_offset = i % 2 * (Width / 2);
+                if (!category.Equals("[none]")) {
+                    Label label = new Label();
+                    label.BackColor = Color.FromArgb(0, 0, 0, 0);
+                    label.ForeColor = Color.FromArgb(172, 172, 225);
+                    label.Font = new Font("Serif", 10, FontStyle.Bold);
+                    label.Text = category;
+                    label.Left = x + x_offset + 5;
+                    label.Top = y[i % 2];
+                    label.Height = 20;
+                    label.Width = Width / 2 - 40;
+                    Controls.Add(label);
+                    y[i % 2] += label.Height;
+                }
+                foreach (CategoryItem waveFile in myParent.WaveFiles)
+                {
+                    if (waveFile.Category.Equals(category))
+                    {
+                        if (x > Width / 2 - 140)       // next row of presets
+                        {
+                            y[i % 2] += 22;
+                            x = 2;
+                        }
+                        GradientButton2 button = new GradientButton2();
+                        button.Left = x + x_offset;
+                        button.Top = y[i % 2];
+                        button.Text = waveFile.Name;
+                        button.Width = 85;
+                        button.Height = 20;
+                        button.ForeColor = Color.White;
+                        button.Font = new Font("Serif", 8.0f, FontStyle.Regular);
+                        button.FlatStyle = FlatStyle.Standard;
+                        button.Click += new EventHandler(wavefilebutton_Click);
+                        button.Category = waveFile;
+                        Controls.Add(button);
+                        x += button.Width + 2;
+                    }
+                }
+                x = 2;
+                y[i % 2] += 24;
+            }
         }
 
         private void FormWaves_FormClosed(object sender, FormClosedEventArgs e)

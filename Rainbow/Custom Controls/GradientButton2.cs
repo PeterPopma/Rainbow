@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rainbow.Synth;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -14,6 +15,7 @@ namespace Rainbow.CustomControls
         Boolean isActive;
         Boolean horizontalGradient;
         Image greyScaleImage;
+        CategoryItem category;
 
         [Description("Is the button active (blue)"), Category("Behavior")]
         public Boolean Active
@@ -28,6 +30,8 @@ namespace Rainbow.CustomControls
             get { return horizontalGradient; }
             set { horizontalGradient = value; }
         }
+
+        public CategoryItem Category { get => category; set => category = value; }
 
         protected override void OnPaint(PaintEventArgs e)
         {

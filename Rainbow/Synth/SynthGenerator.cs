@@ -13,10 +13,15 @@ namespace Rainbow.Synth
         private int bitsPerSample = 32;
         private double repeatBegin = 0.05;
         private double repeatEnd = 0.4;
+        private double duration = 3.4;
+        private double maxDuration = 10.0;
         private List<Note> notes = new List<Note>();
         private float effectOne = 0;
         public const int SHAPE_NUMPOINTS = 1000;
         public const int SHAPE_MAX_VALUE = 500;
+        private int mixMode;
+        private int stretchMode;
+        private int soundBufferSize;
 
         internal WaveInfo WaveInfo { get => waveInfo; set => waveInfo = value; }
         internal FormMain? MainView { get; set; }
@@ -24,6 +29,10 @@ namespace Rainbow.Synth
         public double RepeatEnd { get => repeatEnd; set => repeatEnd = value; }
         internal List<Note> Notes { get => notes; set => notes = value; }
         public float EffectOne { get => effectOne; set => effectOne = value; }
+        public int MixMode { get => mixMode; set => mixMode = value; }
+        public int StretchMode { get => stretchMode; set => stretchMode = value; }
+        public double Duration { get => duration; set => duration = value; }
+        public double MaxDuration { get => maxDuration; set => maxDuration = value; }
 
         public SynthGenerator()
         {
@@ -31,11 +40,17 @@ namespace Rainbow.Synth
 
         public void Initialize()
         {
-            waveInfo.ShapeVolume = new int[SHAPE_NUMPOINTS];
+            waveInfo.ShapeVolume1 = new int[SHAPE_NUMPOINTS];
             for(int k=0; k<SHAPE_NUMPOINTS; k++)
             {
-                waveInfo.ShapeVolume[k] = SHAPE_MAX_VALUE;
+                waveInfo.ShapeVolume1[k] = SHAPE_MAX_VALUE;
             }
+            waveInfo.ShapeVolume2 = new int[SHAPE_NUMPOINTS];
+            for (int k = 0; k < SHAPE_NUMPOINTS; k++)
+            {
+                waveInfo.ShapeVolume2[k] = SHAPE_MAX_VALUE;
+            }
+
         }
 
         public void NoteOff(byte tone)
@@ -53,23 +68,24 @@ namespace Rainbow.Synth
             Notes.Add(note);
         }
 
-        public void LoadWaveFile(string dataFolder, string wavefileName)
+        public void LoadWaveFile(string wavefileName)
         {
-            WaveInfo.WaveFileName = dataFolder + "\\wavefiles\\" + wavefileName + ".wav";
+            WaveInfo.WaveFileName = wavefileName;
             float[] leftChannel = null, rightChannel = null;
             WaveFile.LoadFromDisk(waveInfo, samplesPerSecond, ref leftChannel, ref rightChannel);
             waveInfo.WaveFileDataLeft = leftChannel;
             waveInfo.WaveFileDataLeft = rightChannel;
         }
 
-        public void LoadSecondaryWaveFile(string dataFolder, string wavefileName)
+
+        public void LoadSecondaryWaveFile(string wavefileName)
         {
-            WaveInfo.WaveFileName = dataFolder + "\\wavefiles\\" + wavefileName + ".wav";
+            WaveInfo.WaveFileName = wavefileName;
             float[] leftChannel = null, rightChannel = null;
             if (wavefileName.Equals("[None]"))
             {
-                waveInfo.WaveFileSecondaryLeft = null;
-                waveInfo.WaveFileSecondaryRight = null;
+                waveInfo.WaveFileSecondaryLeft = Array.Empty<float>();
+                waveInfo.WaveFileSecondaryRight = Array.Empty<float>();
             }
             else
             {
@@ -91,12 +107,56 @@ namespace Rainbow.Synth
             WaveInfo.WaveDataRight = UpdateEffects(WaveInfo.WaveFileDataRight, WaveInfo.WaveFileSecondaryRight);
         }
 
+        private float[] InvertSound(float[] soundData)
+        {
+            float[] inverted = new float[soundData.Length];
+            for(int i = 0; i < soundData.Length; i++)
+            {
+                inverted[i] = soundData[soundData.Length - 1 - i];
+            }
+
+            return inverted;
+        }
+
+        public void UpdateSoundBufferSize()
+        {
+            if(stretchMode==0)
+            {
+                soundBufferSize = Math.Max(WaveInfo.WaveFileDataLeft.Length, WaveInfo.WaveFileSecondaryLeft.Length);
+            }
+            else if(stretchMode == 2)
+            {
+                soundBufferSize = Math.Max(WaveInfo.WaveFileDataLeft.Length, WaveInfo.WaveFileSecondaryLeft.Length);
+                // TODO : stretch smallest sound
+            }
+            else
+            {
+                soundBufferSize = Math.Min(WaveInfo.WaveFileDataLeft.Length, WaveInfo.WaveFileSecondaryLeft.Length);
+                // TODO : shrink largest sound
+            }
+            float seconds = soundBufferSize / (float)samplesPerSecond;
+            duration = seconds;
+            maxDuration = duration * 3;
+        }
+
         public float[] UpdateEffects(float[] sourceData, float[] sourceDataSecondary)
         {
+            ApplyVolume(sourceData, waveInfo.ShapeVolume1);
+            if (WaveInfo.Inverted1)
+            {
+                sourceData = InvertSound(sourceData);
+            }
+
             if (sourceDataSecondary!=null)
             {
-                float[] mixedData = new float[Math.Max(sourceData.Length, sourceDataSecondary.Length)];
-                for (long k=0; k<mixedData.Length; k++)
+                ApplyVolume(sourceDataSecondary, waveInfo.ShapeVolume2);
+                if (WaveInfo.Inverted2)
+                {
+                    sourceDataSecondary = InvertSound(sourceDataSecondary);
+                }
+
+                float[] mixedData = new float[soundBufferSize];
+                for (long k=0; k<soundBufferSize; k++)
                 {
                     float percentageComplete = k / (float)mixedData.Length;
                     mixedData[k] = 0;
@@ -113,29 +173,12 @@ namespace Rainbow.Synth
                 sourceData = mixedData;     // replace by mixed sound
             }
 
-            float[] destData = new float[sourceData.Length];
+            Normalize(sourceData);
 
-            for (int numSample = 0; numSample<sourceData.Length; numSample++)
-            {
-                float effectOneValue = numSample % effectOne;
-
-                if (effectOne!=0)
-                {
-                    destData[numSample] = (float)(sourceData[numSample] * (1 + effectOneValue / effectOne));
-                }
-                else
-                {
-                    destData[numSample] = sourceData[numSample];
-                }
-            }
-
-            ApplyVolume(destData);
-            Normalize(destData);
-
-            return destData;
+            return sourceData;
         }
 
-        private void ApplyVolume(float[] waveData)
+        private void ApplyVolume(float[] waveData, int[] shapeVolume)
         {
             for (int numSample = 0; numSample < waveData.Length; numSample++)
             {
@@ -146,7 +189,7 @@ namespace Rainbow.Synth
                 }
                 else
                 {
-                    waveData[numSample] = waveData[numSample] * waveInfo.ShapeVolume[currentPosition] / (float)SHAPE_MAX_VALUE;
+                    waveData[numSample] = waveData[numSample] * shapeVolume[currentPosition] / (float)SHAPE_MAX_VALUE;
                 }
             }
         }

@@ -19,11 +19,12 @@ namespace Rainbow.UI
         SynthGenerator synthGenerator;
         bool changingRepeatBegin = false;
         bool changingRepeatEnd = false;
-        List<string> wavefileNames = new List<string>();
-        string currentWaveFile = "";
-        string currentSecondaryWaveFile = "[None]";
-        List<PresetItem> presets = new List<PresetItem>();
-        PresetItem currentPreset = new PresetItem("Preset1", "");
+        bool changingDuration = false;
+        CategoryItem currentWaveFile;
+        CategoryItem currentSecondaryWaveFile;
+        List<CategoryItem> waveFiles = new List<CategoryItem>();
+        List<CategoryItem> presets = new List<CategoryItem>();
+        CategoryItem currentPreset = new CategoryItem("Preset1", "");
 
         /// <summary>
         /// Constructs a new instance.
@@ -39,28 +40,29 @@ namespace Rainbow.UI
             LoadSettings();
             UpdateWavefilesList();
             UpdateRepeatUI();
-            comboBoxPostProcessing.SelectedIndex = 0;
             panel1.Paint += new PaintEventHandler(GroupBoxPaint);
             LoadPresets();
+            UpdateMixMode();
+            UpdateStretchMode();
         }
 
         /// <summary>
         /// Contains a queue with note-on note numbers currently playing.
         /// </summary>
         internal SynthGenerator SynthGenerator { get => synthGenerator; set => synthGenerator = value; }
-        public List<string> WavefileNames { get => wavefileNames; set => wavefileNames = value; }
         internal Preset Preset { get => Preset1; set => Preset1 = value; }
-        public PresetItem CurrentPreset { get => currentPreset; set => currentPreset = value; }
-        public List<PresetItem> Presets { get => presets; set => presets = value; }
+        public CategoryItem CurrentPreset { get => currentPreset; set => currentPreset = value; }
+        public List<CategoryItem> Presets { get => presets; set => presets = value; }
         internal Preset Preset1 { get => preset; set => preset = value; }
         public string DataFolder { get => dataFolder; set => dataFolder = value; }
-        public string CurrentWaveFile { get => currentWaveFile; set => currentWaveFile = value; }
-        public string CurrentSecondaryWaveFile { get => currentSecondaryWaveFile; set => currentSecondaryWaveFile = value; }
+        public CategoryItem CurrentWaveFile { get => currentWaveFile; set => currentWaveFile = value; }
+        public CategoryItem CurrentSecondaryWaveFile { get => currentSecondaryWaveFile; set => currentSecondaryWaveFile = value; }
+        public List<CategoryItem> WaveFiles { get => waveFiles; set => waveFiles = value; }
 
         public void ReloadPresets()
         {
             Presets.Clear();
-            currentPreset = new PresetItem("Preset1", "");
+            currentPreset = new CategoryItem("Preset1", "");
             LoadPresets();
         }
 
@@ -76,7 +78,7 @@ namespace Rainbow.UI
                     {
                         string name = fileName.Substring(DataFolder.Length+9, fileName.Length - DataFolder.Length - 13);
                         string category = Preset.ReadCategory(dataFolder, name);
-                        PresetItem presetItem = new PresetItem(name, category);
+                        CategoryItem presetItem = new CategoryItem(name, category);
                         Presets.Add(presetItem);
                         if (currentPreset.Name.Equals("Preset1"))        // set first preset
                         {
@@ -96,7 +98,7 @@ namespace Rainbow.UI
 
         public void UpdateWavefilesList()
         {
-            WavefileNames.Clear();
+            waveFiles.Clear();
             // find all wavefiles
             try
             {
@@ -107,9 +109,24 @@ namespace Rainbow.UI
                     {
 
                         string wavefile = fileName.Substring(DataFolder.Length + 11);
-                        wavefile = wavefile.Substring(0, wavefile.Length - 4) ;
-                        WavefileNames.Add(wavefile);
+                        wavefile = wavefile.Substring(0, wavefile.Length - 4);
+                        waveFiles.Add(new CategoryItem(wavefile, "[none]"));
                     }
+                }
+
+                string[] directories = Directory.GetDirectories(DataFolder + "\\wavefiles\\");
+                foreach (string directory in directories) {
+                    string dirname = directory.Substring(DataFolder.Length + 11);     // TODO
+                    fileEntries = Directory.GetFiles(directory + "\\");
+                    foreach (string fileName in fileEntries)
+                    {
+                        if (fileName.EndsWith(".wav"))
+                        {
+                            string wavefile = fileName.Substring(directory.Length + 1);
+                            wavefile = wavefile.Substring(0, wavefile.Length - 4);
+                            waveFiles.Add(new CategoryItem(wavefile, dirname));
+                        }
+                    } 
                 }
             }
             catch (System.IO.DirectoryNotFoundException)
@@ -117,9 +134,9 @@ namespace Rainbow.UI
                 Directory.CreateDirectory("wavefiles");
             }
 
-            if (WavefileNames.Count>0)
+            if (waveFiles.Count>0)
             {
-                setWaveFile(WavefileNames[0]);
+                setWaveFile(waveFiles[0]);
             }
         }
 
@@ -148,19 +165,31 @@ namespace Rainbow.UI
             }
         }
 
-
-        public void setWaveFile(string waveFile)
+        private string GetWaveFileName(CategoryItem waveFile)
         {
-            CurrentWaveFile = labelWaveFile.Text = waveFile;
-            synthGenerator.LoadWaveFile(dataFolder, waveFile);
+            if(waveFile.Category.Equals("[none]"))
+                return dataFolder + "\\wavefiles\\" + waveFile.Name + ".wav";
+            else
+                return dataFolder + "\\wavefiles\\" + waveFile.Category + "\\" + waveFile.Name + ".wav";
+        }
+
+        public void setWaveFile(CategoryItem waveFile)
+        {
+            CurrentWaveFile = waveFile;
+            labelWaveFile.Text = CurrentWaveFile.Name;
+
+            synthGenerator.LoadWaveFile(GetWaveFileName(waveFile));
+            UpdateStretchMode();
             synthGenerator.UpdateEffects();
             //this.Focus();
             //labelDataFolder.Select();
         }
-        public void setSecondaryWaveFile(string waveFile)
+        public void setSecondaryWaveFile(CategoryItem waveFile)
         {
-            CurrentSecondaryWaveFile = labelSecondary.Text = waveFile;
-            synthGenerator.LoadSecondaryWaveFile(dataFolder, waveFile);
+            CurrentSecondaryWaveFile = waveFile;
+            labelSecondary.Text = CurrentSecondaryWaveFile.Name;
+            synthGenerator.LoadSecondaryWaveFile(GetWaveFileName(waveFile));
+            UpdateStretchMode();
             synthGenerator.UpdateEffects();
         }
 
@@ -168,6 +197,12 @@ namespace Rainbow.UI
         {
             labelRepeatBegin.Text = (synthGenerator.RepeatBegin * 100).ToString("0.0") + " %";
             labelRepeatEnd.Text = (synthGenerator.RepeatEnd * 100).ToString("0.0") + " %";
+            pictureBoxRepeat.Invalidate();
+        }
+
+        public void UpdateDurationUI()
+        {
+            labelDuration.Text = (synthGenerator.RepeatEnd * 100).ToString("0.0") + " %";
             pictureBoxRepeat.Invalidate();
         }
 
@@ -251,6 +286,15 @@ namespace Rainbow.UI
             UpdateRepeatUI();
         }
 
+        private void UpdateDurationValue(int x)
+        {
+            if (changingDuration)
+            {
+                synthGenerator.Duration = x / (float)pictureBoxDuration.Width;
+                UpdateDurationUI();
+            }
+        }
+
         private void pictureBoxRepeat_MouseUp(object sender, MouseEventArgs e)
         {
             changingRepeatBegin = false;
@@ -274,25 +318,25 @@ namespace Rainbow.UI
 
         private void gradientButtonNextWave_Click(object sender, EventArgs e)
         {
-            int index = wavefileNames.IndexOf(wavefileNames.Find(x => x.Equals(CurrentWaveFile)));
+            int index = WaveFiles.IndexOf(WaveFiles.Find(x => x.Equals(CurrentWaveFile)));
             index++;
-            if (index> wavefileNames.Count-1)
+            if (index> WaveFiles.Count-1)
             {
                 index = 0;
             }
-            string waveFile = wavefileNames[index];
+            CategoryItem waveFile = waveFiles[index];
             setWaveFile(waveFile);
         }
 
         private void gradientButtonPreviousWave_Click(object sender, EventArgs e)
         {
-            int index = wavefileNames.IndexOf(wavefileNames.Find(x => x.Equals(CurrentWaveFile)));
+            int index = WaveFiles.IndexOf(WaveFiles.Find(x => x.Equals(CurrentWaveFile)));
             index--;
             if (index < 0)
             {
-                index = wavefileNames.Count - 1;
+                index = WaveFiles.Count - 1;
             }
-            string waveFile = wavefileNames[index];
+            CategoryItem waveFile = waveFiles[index];
             setWaveFile(waveFile);
         }
 
@@ -354,8 +398,8 @@ namespace Rainbow.UI
         {
             labelPreset.Text = CurrentPreset.Name;
             UpdateRepeatUI();
-            labelWaveFile.Text = CurrentWaveFile;
-            pictureBoxVolumeShape.Refresh();
+            labelWaveFile.Text = CurrentWaveFile.Name;
+            pictureBoxVolume1.Refresh();
         }
 
         private void LoadSettings()
@@ -384,10 +428,23 @@ namespace Rainbow.UI
             labelPreset.Cursor = Cursors.Hand;
         }
 
-        public List<string> GetAllCategories()
+        public List<string> GetAllPresetCategories()
         {
             List<string> categories = new List<string>();
-            foreach (PresetItem presetItem in Presets)
+            foreach (CategoryItem presetItem in Presets)
+            {
+                if (!categories.Contains(presetItem.Category))
+                {
+                    categories.Add(presetItem.Category);
+                }
+            }
+
+            return categories;
+        }
+        public List<string> GetAllWaveFileCategories()
+        {
+            List<string> categories = new List<string>();
+            foreach (CategoryItem presetItem in WaveFiles)
             {
                 if (!categories.Contains(presetItem.Category))
                 {
@@ -398,7 +455,7 @@ namespace Rainbow.UI
             return categories;
         }
 
-        public PresetItem FindPresetByName(string name)
+        public CategoryItem FindPresetByName(string name)
         {
             return Presets.Find(x => x.Name.Equals(name));
         }
@@ -408,7 +465,7 @@ namespace Rainbow.UI
             FormWaves formWaves = new FormWaves();
             formWaves.MyParent = this;
             Point location = this.PointToScreen(Point.Empty);
-            formWaves.Location = new Point(location.X + 10, location.Y + 10);
+            formWaves.Location = new Point(location.X + 1, location.Y + 1);
 
             formWaves.ShowDialog();
         }
@@ -444,16 +501,6 @@ namespace Rainbow.UI
             SetPreset(currentPreset);
         }
 
-        private void pictureBoxRepeat_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void numericUpDownFlattenEffect_ValueChanged(object sender, EventArgs e)
-        {
-            synthGenerator.EffectOne = (float)numericUpDownEffect1.Value;
-            synthGenerator.UpdateEffects();
-        }
 
         private void labelSecondary_MouseMove(object sender, MouseEventArgs e)
         {
@@ -466,32 +513,32 @@ namespace Rainbow.UI
             formWaves.MyParent = this;
             formWaves.IsSecondary = true;
             Point location = this.PointToScreen(Point.Empty);
-            formWaves.Location = new Point(location.X + 10, location.Y + 10);
+            formWaves.Location = new Point(location.X + 1, location.Y + 1);
 
             formWaves.ShowDialog();
         }
 
         private void gradientButtonNextSecondary_Click(object sender, EventArgs e)
         {
-            int index = wavefileNames.IndexOf(wavefileNames.Find(x => x.Equals(CurrentSecondaryWaveFile)));
+            int index = WaveFiles.IndexOf(WaveFiles.Find(x => x.Equals(CurrentSecondaryWaveFile)));
             index++;
-            if (index > wavefileNames.Count - 1)
+            if (index > WaveFiles.Count - 1)
             {
                 index = 0;
             }
-            string waveFile = wavefileNames[index];
+            CategoryItem waveFile = waveFiles[index];
             setSecondaryWaveFile(waveFile);
         }
 
         private void gradientButtonPreviousSecondary_Click(object sender, EventArgs e)
         {
-            int index = wavefileNames.IndexOf(wavefileNames.Find(x => x.Equals(CurrentSecondaryWaveFile)));
+            int index = WaveFiles.IndexOf(WaveFiles.Find(x => x.Equals(CurrentSecondaryWaveFile)));
             index--;
             if (index < 0)
             {
-                index = wavefileNames.Count - 1;
+                index = WaveFiles.Count - 1;
             }
-            string waveFile = wavefileNames[index];
+            CategoryItem waveFile = waveFiles[index];
             setSecondaryWaveFile(waveFile);
         }
 
@@ -500,7 +547,7 @@ namespace Rainbow.UI
             FormWaves formWaves = new FormWaves();
             formWaves.MyParent = this;
             Point location = this.PointToScreen(Point.Empty);
-            formWaves.Location = new Point(location.X + 10, location.Y + 10);
+            formWaves.Location = new Point(location.X + 1, location.Y + 1);
 
             formWaves.ShowDialog();
 
@@ -512,24 +559,25 @@ namespace Rainbow.UI
             formWaves.MyParent = this;
             formWaves.IsSecondary = true;
             Point location = this.PointToScreen(Point.Empty);
-            formWaves.Location = new Point(location.X + 10, location.Y + 10);
+            formWaves.Location = new Point(location.X + 1, location.Y + 1);
 
             formWaves.ShowDialog();
         }
 
-        private void pictureBoxVolumeShape_Click(object sender, EventArgs e)
+        private void pictureBoxVolume1_Click(object sender, EventArgs e)
         {
             FormVolume formVolume = new FormVolume();
             formVolume.MyParent = this;
+            formVolume.IsSecondarySound = false;
             formVolume.ShowDialog();
         }
 
-        private void pictureBoxVolumeShape_MouseMove(object sender, MouseEventArgs e)
+        private void pictureBoxVolume1_MouseMove(object sender, MouseEventArgs e)
         {
-            pictureBoxVolumeShape.Cursor = Cursors.Hand;
+            pictureBoxVolume1.Cursor = Cursors.Hand;
         }
 
-        private void pictureBoxVolumeShape_Paint(object sender, PaintEventArgs e)
+        private void pictureBoxVolume1_Paint(object sender, PaintEventArgs e)
         {
             Control control = (Control)sender;
             using (LinearGradientBrush brush = new LinearGradientBrush(control.ClientRectangle,
@@ -543,20 +591,226 @@ namespace Rainbow.UI
 
             Pen pen = new Pen(Color.White);
 
-            if (synthGenerator.WaveInfo.ShapeVolume.Length == SynthGenerator.SHAPE_NUMPOINTS)
+            if (synthGenerator.WaveInfo.ShapeVolume1.Length == SynthGenerator.SHAPE_NUMPOINTS)
             {
-                for (int x = 0; x < pictureBoxVolumeShape.Width; x++)
+                for (int x = 0; x < pictureBoxVolume1.Width; x++)
                 {
-                    int position = (int)(x / (double)pictureBoxVolumeShape.Width * SynthGenerator.SHAPE_NUMPOINTS);
-                    int next_position = (int)((x + 1) / (double)pictureBoxVolumeShape.Width * SynthGenerator.SHAPE_NUMPOINTS);
+                    int position = (int)(x / (double)pictureBoxVolume1.Width * SynthGenerator.SHAPE_NUMPOINTS);
+                    int next_position = (int)((x + 1) / (double)pictureBoxVolume1.Width * SynthGenerator.SHAPE_NUMPOINTS);
                     if (next_position < SynthGenerator.SHAPE_NUMPOINTS)
                     {
-                        int value1 = (int)((SynthGenerator.SHAPE_MAX_VALUE - synthGenerator.WaveInfo.ShapeVolume[position]) * (pictureBoxVolumeShape.Height / (double)SynthGenerator.SHAPE_MAX_VALUE));
-                        int value2 = (int)((SynthGenerator.SHAPE_MAX_VALUE - synthGenerator.WaveInfo.ShapeVolume[next_position]) * (pictureBoxVolumeShape.Height / (double)SynthGenerator.SHAPE_MAX_VALUE));
+                        int value1 = (int)((SynthGenerator.SHAPE_MAX_VALUE - synthGenerator.WaveInfo.ShapeVolume1[position]) * (pictureBoxVolume1.Height / (double)SynthGenerator.SHAPE_MAX_VALUE));
+                        int value2 = (int)((SynthGenerator.SHAPE_MAX_VALUE - synthGenerator.WaveInfo.ShapeVolume1[next_position]) * (pictureBoxVolume1.Height / (double)SynthGenerator.SHAPE_MAX_VALUE));
                         e.Graphics.DrawLine(pen, new Point(x, value1), new Point(x + 1, value2));
                     }
                 }
             }
+        }
+
+        private void panelBaseSound_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void panelSecondarySound_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void pictureBoxVolume2_Click(object sender, EventArgs e)
+        {
+            FormVolume formVolume = new FormVolume();
+            formVolume.IsSecondarySound = true;
+            formVolume.MyParent = this;
+            formVolume.ShowDialog();
+        }
+
+        private void pictureBoxVolume2_Paint(object sender, PaintEventArgs e)
+        {
+            Control control = (Control)sender;
+            using (LinearGradientBrush brush = new LinearGradientBrush(control.ClientRectangle,
+                                                                       Color.FromArgb(70, 87, 195),
+                                                                       Color.FromArgb(0, 0, 15),
+                                                                       90F))
+            {
+                e.Graphics.FillRectangle(brush, control.ClientRectangle);
+                ControlPaint.DrawBorder(e.Graphics, control.ClientRectangle, Color.Gray, ButtonBorderStyle.Solid);
+            }
+
+            Pen pen = new Pen(Color.White);
+
+            if (synthGenerator.WaveInfo.ShapeVolume2.Length == SynthGenerator.SHAPE_NUMPOINTS)
+            {
+                for (int x = 0; x < pictureBoxVolume2.Width; x++)
+                {
+                    int position = (int)(x / (double)pictureBoxVolume2.Width * SynthGenerator.SHAPE_NUMPOINTS);
+                    int next_position = (int)((x + 1) / (double)pictureBoxVolume2.Width * SynthGenerator.SHAPE_NUMPOINTS);
+                    if (next_position < SynthGenerator.SHAPE_NUMPOINTS)
+                    {
+                        int value1 = (int)((SynthGenerator.SHAPE_MAX_VALUE - synthGenerator.WaveInfo.ShapeVolume2[position]) * (pictureBoxVolume2.Height / (double)SynthGenerator.SHAPE_MAX_VALUE));
+                        int value2 = (int)((SynthGenerator.SHAPE_MAX_VALUE - synthGenerator.WaveInfo.ShapeVolume2[next_position]) * (pictureBoxVolume2.Height / (double)SynthGenerator.SHAPE_MAX_VALUE));
+                        e.Graphics.DrawLine(pen, new Point(x, value1), new Point(x + 1, value2));
+                    }
+                }
+            }
+        }
+
+        private void pictureBoxVolume2_MouseMove(object sender, MouseEventArgs e)
+        {
+            pictureBoxVolume2.Cursor = Cursors.Hand;
+        }
+
+        private void pictureBoxMixMode_Click(object sender, EventArgs e)
+        {
+            FormStretchMode formStretchMode = new FormStretchMode();
+            formStretchMode.MyParent = this;
+            formStretchMode.ShowDialog();
+        }
+
+        private void gradientButtonNextMixMode_Click(object sender, EventArgs e)
+        {
+            synthGenerator.MixMode++;
+            if (synthGenerator.MixMode>4)
+            {
+                synthGenerator.MixMode = 0;
+            }
+            UpdateMixMode();
+        }
+
+        private void UpdateMixMode()
+        {
+            switch(synthGenerator.MixMode)
+            {
+                case 0:
+                    labelMixMode.Text = "Both same weight";
+                    pictureBoxMixMode.Image = Properties.Resources.sameweight;
+                    break;
+                case 1:
+                    labelMixMode.Text = "Multiply 1 by 2";
+                    pictureBoxMixMode.Image = Properties.Resources.multiply;
+                    break;
+                case 2:
+                    labelMixMode.Text = "Alternate Square";
+                    pictureBoxMixMode.Image = Properties.Resources.alternatesquare;
+                    break;
+                case 3:
+                    labelMixMode.Text = "Alternate Triangle";
+                    pictureBoxMixMode.Image = Properties.Resources.alternatetriangle;
+                    break;
+                case 4:
+                    labelMixMode.Text = "Alternate Sine";
+                    pictureBoxMixMode.Image = Properties.Resources.alternatesine;
+                    break;
+            }
+        }
+
+        private void UpdateStretchMode()
+        {
+            switch (synthGenerator.StretchMode)
+            {
+                case 0:
+                    labelStretchMode.Text = "Overlapping";
+                    pictureBoxStretchMode.Image = Properties.Resources.overlap;
+                    break;
+                case 1:
+                    labelStretchMode.Text = "Stretch to Largest";
+                    pictureBoxStretchMode.Image = Properties.Resources.stretchtolargest;
+                    break;
+                case 2:
+                    labelStretchMode.Text = "Shrink to Smallest";
+                    pictureBoxStretchMode.Image = Properties.Resources.shrinktosmallest;
+                    break;
+            }
+            synthGenerator.UpdateSoundBufferSize();
+            pictureBoxDuration.Refresh();
+            labelDuration.Text = synthGenerator.Duration.ToString("0.000");
+        }
+
+        private void gradientButtonPreviousMixMode_Click(object sender, EventArgs e)
+        {
+            synthGenerator.MixMode--;
+            if (synthGenerator.MixMode < 0)
+            {
+                synthGenerator.MixMode = 4;
+            }
+            UpdateMixMode();
+        }
+
+        private void gradientButtonPreviousStretchMode_Click(object sender, EventArgs e)
+        {
+            synthGenerator.StretchMode--;
+            if (synthGenerator.StretchMode < 0)
+            {
+                synthGenerator.StretchMode = 2;
+            }
+            UpdateStretchMode();
+        }
+
+        private void gradientButtonNextStretchMode_Click(object sender, EventArgs e)
+        {
+            synthGenerator.StretchMode++;
+            if (synthGenerator.StretchMode > 2)
+            {
+                synthGenerator.StretchMode = 0;
+            }
+            UpdateStretchMode();
+        }
+
+        private void pictureBoxDuration_Paint(object sender, PaintEventArgs e)
+        {
+            LinearGradientBrush linGrBrush = new LinearGradientBrush(
+                                      new Point(0, 10),
+                                      new Point(pictureBoxDuration.Width, 10),
+                                      Color.FromArgb(255, 80, 80, 80),
+                                      Color.FromArgb(255, 200, 200, 200));
+
+            Rectangle rect = new Rectangle(0, 0, pictureBoxDuration.Width, pictureBoxDuration.Height);
+            e.Graphics.FillRectangle(linGrBrush, rect);
+
+            linGrBrush = new LinearGradientBrush(
+                                                  new Point(0, 10),
+                                                  new Point(pictureBoxDuration.Width, 10),
+                                                  Color.FromArgb(255, 0, 0, 0),     // Opaque black
+                                                  Color.FromArgb(255, 255, 0, 0));  // Opaque red
+
+            rect = new Rectangle(0, 0, (int)(pictureBoxDuration.Width * (synthGenerator.Duration / synthGenerator.MaxDuration)), pictureBoxDuration.Height);
+            e.Graphics.FillRectangle(linGrBrush, rect);
+        }
+
+        private void checkBoxInvert1_CheckedChanged(object sender, EventArgs e)
+        {
+            synthGenerator.WaveInfo.Inverted1 = checkBoxInvert1.Checked;
+            synthGenerator.UpdateEffects();
+        }
+
+        private void checkBoxInvert2_CheckedChanged(object sender, EventArgs e)
+        {
+            synthGenerator.WaveInfo.Inverted2 = checkBoxInvert2.Checked;
+            synthGenerator.UpdateEffects();
+        }
+
+        private void pictureBoxDuration_MouseDown(object sender, MouseEventArgs e)
+        {
+            changingDuration = true;
+            UpdateDurationValue(e.X);
+        }
+
+        private void pictureBoxDuration_MouseUp(object sender, MouseEventArgs e)
+        {
+            changingDuration = false;
+        }
+
+        private void pictureBoxDuration_MouseMove(object sender, MouseEventArgs e)
+        {
+            pictureBoxRepeat.Cursor = Cursors.VSplit;
+            UpdateDurationValue(e.X);
+        }
+
+        private void pictureBoxMixMode_Click_1(object sender, EventArgs e)
+        {
+            FormMixMode formMixMode = new FormMixMode();
+            formMixMode.MyParent = this;
+            formMixMode.ShowDialog();
         }
     }
 }

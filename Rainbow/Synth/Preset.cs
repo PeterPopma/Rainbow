@@ -19,7 +19,7 @@ namespace Rainbow.Synth
             providerDecimalPoint.NumberDecimalSeparator = ".";
         }
 
-        public void Save(FormMain formMain, SynthGenerator synthGenerator, PresetItem presetItem)
+        public void Save(FormMain formMain, SynthGenerator synthGenerator, CategoryItem presetItem)
         {
             if (presetItem.Name.Length == 0)
             {
@@ -33,14 +33,21 @@ namespace Rainbow.Synth
                 new System.IO.StreamWriter(formMain.DataFolder + "\\presets\\" + presetItem.Name + ".pst"))
             {
                 file.WriteLine(presetItem.Category);
-                file.WriteLine(formMain.CurrentWaveFile);
-                file.WriteLine(formMain.CurrentSecondaryWaveFile);
+                file.WriteLine(formMain.CurrentWaveFile.Name);
+                file.WriteLine(formMain.CurrentWaveFile.Category);
+                file.WriteLine(formMain.CurrentSecondaryWaveFile.Name);
+                file.WriteLine(formMain.CurrentSecondaryWaveFile.Category);
                 file.WriteLine(synthGenerator.RepeatBegin.ToString(providerDecimalPoint));
                 file.WriteLine(synthGenerator.RepeatEnd.ToString(providerDecimalPoint));
-                file.WriteLine(synthGenerator.WaveInfo.ShapeVolume.Length);
-                for (int j = 0; j < synthGenerator.WaveInfo.ShapeVolume.Length; j++)
+                file.WriteLine(synthGenerator.WaveInfo.ShapeVolume1.Length);
+                for (int j = 0; j < synthGenerator.WaveInfo.ShapeVolume1.Length; j++)
                 {
-                    file.WriteLine(synthGenerator.WaveInfo.ShapeVolume[j]);
+                    file.WriteLine(synthGenerator.WaveInfo.ShapeVolume1[j]);
+                }
+                file.WriteLine(synthGenerator.WaveInfo.ShapeVolume2.Length);
+                for (int j = 0; j < synthGenerator.WaveInfo.ShapeVolume2.Length; j++)
+                {
+                    file.WriteLine(synthGenerator.WaveInfo.ShapeVolume2[j]);
                 }
             }
         }
@@ -58,15 +65,22 @@ namespace Rainbow.Synth
             using (StreamReader srFile = new StreamReader(dataFolder + "\\presets\\" + name + ".pst"))
             {
                 srFile.ReadLine();      // category we don't need to know when loading
-                formMain.CurrentWaveFile = srFile.ReadLine();
-                formMain.CurrentSecondaryWaveFile = srFile.ReadLine();
+                formMain.CurrentWaveFile.Name = srFile.ReadLine();
+                formMain.CurrentWaveFile.Category = srFile.ReadLine();
+                formMain.CurrentSecondaryWaveFile.Name = srFile.ReadLine();
+                formMain.CurrentSecondaryWaveFile.Category = srFile.ReadLine();
                 synthGenerator.RepeatBegin = double.Parse(srFile.ReadLine(), providerDecimalPoint);
                 synthGenerator.RepeatEnd = double.Parse(srFile.ReadLine(), providerDecimalPoint);
                 int length = int.Parse(srFile.ReadLine());
-                synthGenerator.WaveInfo.ShapeVolume = new int[length];
+                synthGenerator.WaveInfo.ShapeVolume1 = new int[length];
                 for (int j = 0; j < length; j++)
                 {
-                    synthGenerator.WaveInfo.ShapeVolume[j] = int.Parse(srFile.ReadLine());
+                    synthGenerator.WaveInfo.ShapeVolume1[j] = int.Parse(srFile.ReadLine());
+                }
+                synthGenerator.WaveInfo.ShapeVolume2 = new int[length];
+                for (int j = 0; j < length; j++)
+                {
+                    synthGenerator.WaveInfo.ShapeVolume2[j] = int.Parse(srFile.ReadLine());
                 }
             }
             formMain.setWaveFile(formMain.CurrentWaveFile);
