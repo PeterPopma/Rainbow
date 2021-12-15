@@ -20,6 +20,7 @@ namespace Rainbow.Synth
         public const int SHAPE_NUMPOINTS = 1000;
         public const int SHAPE_MAX_VALUE = 500;
         private int mixMode;
+        private int numMixWaves = 1; 
         private int stretchMode;
         private int soundBufferSize;
 
@@ -33,6 +34,7 @@ namespace Rainbow.Synth
         public int StretchMode { get => stretchMode; set => stretchMode = value; }
         public double Duration { get => duration; set => duration = value; }
         public double MaxDuration { get => maxDuration; set => maxDuration = value; }
+        public int NumMixWaves { get => numMixWaves; set => numMixWaves = value; }
 
         public SynthGenerator()
         {
@@ -68,43 +70,16 @@ namespace Rainbow.Synth
             Notes.Add(note);
         }
 
-        public void LoadWaveFile(string wavefileName)
+        public void LoadWaveFile(string wavefileName, int soundNumber)
         {
-            WaveInfo.WaveFileName = wavefileName;
-            float[] leftChannel = null, rightChannel = null;
-            WaveFile.LoadFromDisk(waveInfo, samplesPerSecond, ref leftChannel, ref rightChannel);
-            waveInfo.WaveFileDataLeft = leftChannel;
-            waveInfo.WaveFileDataLeft = rightChannel;
-        }
-
-
-        public void LoadSecondaryWaveFile(string wavefileName)
-        {
-            WaveInfo.WaveFileName = wavefileName;
-            float[] leftChannel = null, rightChannel = null;
-            if (wavefileName.Equals("[None]"))
-            {
-                waveInfo.WaveFileSecondaryLeft = Array.Empty<float>();
-                waveInfo.WaveFileSecondaryRight = Array.Empty<float>();
-            }
-            else
-            {
-                WaveFile.LoadFromDisk(waveInfo, samplesPerSecond, ref leftChannel, ref rightChannel);
-                waveInfo.WaveFileSecondaryLeft = leftChannel;
-                waveInfo.WaveFileSecondaryRight = rightChannel;
-            }
-        }
-
-        public void SaveAsWaveFile()
-        {
-            WaveFile.SaveToDisk(WaveInfo, samplesPerSecond, bitsPerSample);
+            WaveFile.LoadFromDisk(wavefileName, waveInfo, samplesPerSecond, soundNumber);
         }
 
         // call when Preset settings changed (but when .wav files change, call LoadWaveFile first)
         public void UpdateEffects()
         {
-            WaveInfo.WaveDataLeft = UpdateEffects(WaveInfo.WaveFileDataLeft, WaveInfo.WaveFileSecondaryLeft);
-            WaveInfo.WaveDataRight = UpdateEffects(WaveInfo.WaveFileDataRight, WaveInfo.WaveFileSecondaryRight);
+            WaveInfo.WaveDataLeft = ProcessSound(WaveInfo.WaveFileData1Left, WaveInfo.WaveFileData2Left);
+            WaveInfo.WaveDataRight = ProcessSound(WaveInfo.WaveFileData1Right, WaveInfo.WaveFileData2Right);
         }
 
         private float[] InvertSound(float[] soundData)
@@ -120,66 +95,228 @@ namespace Rainbow.Synth
 
         public void UpdateSoundBufferSize()
         {
-            if(stretchMode==0)
+            if (stretchMode==0)   // overlapping
             {
-                soundBufferSize = Math.Max(WaveInfo.WaveFileDataLeft.Length, WaveInfo.WaveFileSecondaryLeft.Length);
+                soundBufferSize = Math.Max(WaveInfo.WaveFileData1Left.Length, WaveInfo.WaveFileData2Left.Length);
             }
-            else if(stretchMode == 2)
+            else if (stretchMode == 1)      // Repeat smallest
             {
-                soundBufferSize = Math.Max(WaveInfo.WaveFileDataLeft.Length, WaveInfo.WaveFileSecondaryLeft.Length);
-                // TODO : stretch smallest sound
+                soundBufferSize = Math.Max(WaveInfo.WaveFileData1Left.Length, WaveInfo.WaveFileData2Left.Length);
             }
-            else
+            else if (stretchMode == 2)      // Stretch to Largest
             {
-                soundBufferSize = Math.Min(WaveInfo.WaveFileDataLeft.Length, WaveInfo.WaveFileSecondaryLeft.Length);
-                // TODO : shrink largest sound
+                soundBufferSize = Math.Max(WaveInfo.WaveFileData1Left.Length, WaveInfo.WaveFileData2Left.Length);
+            }
+            else   // Shrink to Smallest
+            {
+                soundBufferSize = Math.Min(WaveInfo.WaveFileData1Left.Length, WaveInfo.WaveFileData2Left.Length);
             }
             float seconds = soundBufferSize / (float)samplesPerSecond;
             duration = seconds;
             maxDuration = duration * 3;
+            UpdateEffects();
         }
 
-        public float[] UpdateEffects(float[] sourceData, float[] sourceDataSecondary)
+        // resize the soundbuffers
+        private void ApplyStretch(ref float[] sourceData1, ref float[] sourceData2)
         {
-            ApplyVolume(sourceData, waveInfo.ShapeVolume1);
+            if (stretchMode == 0)   // overlap
+            {
+                if (sourceData1.Length>sourceData2.Length)
+                {
+                    float[] newBuffer = new float[sourceData1.Length];
+                    for (int k=0; k<newBuffer.Length; k++)
+                    {
+                        if (k < sourceData1.Length - sourceData2.Length)
+                        {
+                            newBuffer[k] = 0;
+                        }
+                        else
+                        {
+                            newBuffer[k] = sourceData2[k - sourceData1.Length + sourceData2.Length];
+                        }
+                    }
+                    sourceData2 = newBuffer;
+                }
+                else
+                {
+                    float[] newBuffer = new float[sourceData2.Length];
+                    for (int k = 0; k < newBuffer.Length; k++)
+                    {
+                        if (k < sourceData1.Length)
+                        {
+                            newBuffer[k] = sourceData1[k];
+                        }
+                        else
+                        {
+                            newBuffer[k] = 0;
+                        }
+                    }
+                    sourceData1 = newBuffer;
+                }
+            }
+            if (stretchMode == 1)   // repeat smallest
+            {
+                if (sourceData1.Length > sourceData2.Length)
+                {
+                    float[] newBuffer = new float[sourceData1.Length];
+                    for (int k = 0; k < newBuffer.Length; k++)
+                    {
+                        newBuffer[k] = sourceData2[k % sourceData2.Length];
+                    }
+                    sourceData2 = newBuffer;
+                }
+                else
+                {
+                    float[] newBuffer = new float[sourceData2.Length];
+                    for (int k = 0; k < newBuffer.Length; k++)
+                    {
+                        newBuffer[k] = sourceData1[k % sourceData1.Length];
+                    }
+                    sourceData1 = newBuffer;
+                }
+            }
+            if (stretchMode == 2)   // stretch to largest
+            {
+                if (sourceData1.Length > sourceData2.Length)
+                {
+                    float[] newBuffer = new float[sourceData1.Length];
+                    for (int k = 0; k < newBuffer.Length; k++)
+                    {
+                        float percentageComplete = k/(float)newBuffer.Length;
+                        newBuffer[k] = sourceData2[(int)(percentageComplete * sourceData2.Length)];
+                    }
+                    sourceData2 = newBuffer;
+                }
+                else 
+                {
+                    float[] newBuffer = new float[sourceData2.Length];
+                    for (int k = 0; k < newBuffer.Length; k++)
+                    {
+                        float percentageComplete = k / (float)newBuffer.Length;
+                        newBuffer[k] = sourceData1[(int)(percentageComplete * sourceData1.Length)];
+                    }
+                    sourceData1 = newBuffer;
+                }
+            }
+            if (stretchMode == 3)   // shrink to smallest
+            {
+                if (sourceData1.Length > sourceData2.Length)
+                {
+                    float[] newBuffer = new float[sourceData2.Length];
+                    for (int k = 0; k < newBuffer.Length; k++)
+                    {
+                        float shrinkFactor = sourceData1.Length / (float)sourceData2.Length;
+                        newBuffer[k] = sourceData1[(int)(k * shrinkFactor)];
+                    }
+                    sourceData1 = newBuffer;
+                }
+                else
+                {
+                    float[] newBuffer = new float[sourceData1.Length];
+                    for (int k = 0; k < newBuffer.Length; k++)
+                    {
+                        float shrinkFactor = sourceData2.Length / (float)sourceData1.Length;
+                        newBuffer[k] = sourceData2[(int)(k * shrinkFactor)];
+                    }
+                    sourceData1 = newBuffer;
+                }
+            }
+        }
+
+        private float ApplyMix(float percentageComplete, float soundData1, float soundData2)
+        {
+            if (MixMode == 0)   // Fade in - Fade out
+            {
+                return soundData1 * percentageComplete + soundData2 * (1-percentageComplete);
+            } else if(MixMode == 1)   // Both same weight
+            {
+                return soundData1 + soundData2;
+            }
+            else if(MixMode == 2)   // Multiply 1 by 2
+            {
+                return soundData1 * soundData2;
+            } 
+            else if(MixMode == 3)   // Alternate Square
+            {
+                float value = 0;
+                if (percentageComplete % (1/(float)numMixWaves) <= 1 / (float)numMixWaves*2)
+                {
+                    value += soundData1;
+                }
+                if (percentageComplete % (1 / (float)numMixWaves) > 1 / (float)numMixWaves * 2)
+                {
+                    value += soundData2;
+                }
+                return value;
+            }
+            else if(MixMode == 4)   // Alternate Triangle
+            {
+                float value = 0;
+                float currentPhase = (percentageComplete % (1 / (float)numMixWaves)) / (1 / (float)numMixWaves);
+                value += (1-currentPhase) * soundData1;
+                value += currentPhase * soundData2;
+                return value;
+            }
+            else   // Alternate Sine
+            {
+                double value = 0;
+                float currentPhase = (percentageComplete % (1 / (float)numMixWaves)) / (1 / (float)numMixWaves);
+                value += Math.Sin((currentPhase+0.5) * Math.PI * 2) * soundData1;
+                value += Math.Sin(currentPhase * Math.PI * 2) * soundData2;
+                return (float)value;
+            }
+
+        }
+
+    public float[] ProcessSound(float[] sourceData1, float[] sourceData2)
+        {
+            float[] tempData1 = ApplyVolume(sourceData1, waveInfo.ShapeVolume1);
             if (WaveInfo.Inverted1)
             {
-                sourceData = InvertSound(sourceData);
+                tempData1 = InvertSound(tempData1);
             }
 
-            if (sourceDataSecondary!=null)
+            float[] tempData2 = ApplyVolume(sourceData2, waveInfo.ShapeVolume2);
+            if (WaveInfo.Inverted2)
             {
-                ApplyVolume(sourceDataSecondary, waveInfo.ShapeVolume2);
-                if (WaveInfo.Inverted2)
-                {
-                    sourceDataSecondary = InvertSound(sourceDataSecondary);
-                }
-
-                float[] mixedData = new float[soundBufferSize];
-                for (long k=0; k<soundBufferSize; k++)
-                {
-                    float percentageComplete = k / (float)mixedData.Length;
-                    mixedData[k] = 0;
-                    if (k < sourceData.Length-1)
-                    {
-                        mixedData[k] = sourceData[k] * (1-percentageComplete);
-                    }
-                    if (k >= mixedData.Length - sourceDataSecondary.Length)
-                    {
-                        mixedData[k] += sourceDataSecondary[k - mixedData.Length + sourceDataSecondary.Length] * percentageComplete;
-                    }
-                }
-
-                sourceData = mixedData;     // replace by mixed sound
+                tempData2 = InvertSound(tempData2);
             }
 
-            Normalize(sourceData);
+            ApplyStretch(ref tempData1, ref tempData2);
 
-            return sourceData;
+            float[] mixedData = new float[soundBufferSize];
+            for (long k=0; k<soundBufferSize; k++)
+            {
+                mixedData[k] = 0;
+                float percentageComplete = k / (float)mixedData.Length;
+
+                mixedData[k] += ApplyMix(percentageComplete, tempData1[k], tempData2[k]);
+            }
+
+            mixedData = ApplyDuration(mixedData);
+
+            Normalize(mixedData);
+
+            return mixedData;
         }
 
-        private void ApplyVolume(float[] waveData, int[] shapeVolume)
+        private float[] ApplyDuration(float[] sourceData)
         {
+            float[] destData = new float[(int)(duration * samplesPerSecond)];
+            for (long k=0; k<destData.Length; k++)
+            {
+                float percentageComplete = k / (float)destData.Length;
+                int position = (int)(percentageComplete * sourceData.Length);
+                destData[k] = sourceData[position];
+            }
+
+            return destData;
+        }
+
+        private float[] ApplyVolume(float[] waveData, int[] shapeVolume)
+        {
+            float[] destData = new float[waveData.Length];
             for (int numSample = 0; numSample < waveData.Length; numSample++)
             {
                 int currentPosition = (int)(SHAPE_NUMPOINTS * numSample / (float)waveData.Length);
@@ -189,9 +326,11 @@ namespace Rainbow.Synth
                 }
                 else
                 {
-                    waveData[numSample] = waveData[numSample] * shapeVolume[currentPosition] / (float)SHAPE_MAX_VALUE;
+                    destData[numSample] = waveData[numSample] * shapeVolume[currentPosition] / (float)SHAPE_MAX_VALUE;
                 }
             }
+
+            return destData;
         }
 
         private void Normalize(float[] waveData)
@@ -240,7 +379,7 @@ namespace Rainbow.Synth
 //                        System.Diagnostics.Debug.WriteLine("rewind:" + note.Tone);
                     }
                     int position = (int)note.PlayPosition;
-                    if (position >= WaveInfo.WaveFileDataLeft.Length)
+                    if (position >= WaveInfo.WaveDataLeft.Length)
                     {
                         Notes.RemoveAll(r => r.Tone == note.Tone);
                     }
@@ -267,6 +406,5 @@ namespace Rainbow.Synth
                 }
             }
         }
-
     }
 }

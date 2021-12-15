@@ -52,11 +52,11 @@ namespace Rainbow.UI
             Cursor = Cursors.WaitCursor;
             if (isSecondary)
             {
-                myParent.setSecondaryWaveFile(myButton.Category);
+                myParent.setWaveFile2(myButton.Category);
             }
             else
             {
-                myParent.setWaveFile(myButton.Category);
+                myParent.setWaveFile1(myButton.Category);
             }
             Cursor = Cursors.Default;
             Close();
@@ -68,24 +68,50 @@ namespace Rainbow.UI
             int x = 2;
             int[] y = new int[] { 2, 2 };
 
+            // First add the items without a category
+            foreach (CategoryItem waveFile in myParent.WaveFiles)
+            {
+                if (waveFile.Category.Equals("[none]"))
+                {
+                    if (x > Width / 2 - 140)       // next row of presets
+                    {
+                        y[0] += 22;
+                        x = 2;
+                    }
+                    GradientButton2 button = new GradientButton2();
+                    button.Left = x;
+                    button.Top = y[0];
+                    button.Text = waveFile.Name;
+                    button.Width = 85;
+                    button.Height = 20;
+                    button.ForeColor = Color.White;
+                    button.Font = new Font("Serif", 8.0f, FontStyle.Regular);
+                    button.FlatStyle = FlatStyle.Standard;
+                    button.Click += new EventHandler(wavefilebutton_Click);
+                    button.Category = waveFile;
+                    Controls.Add(button);
+                    x += button.Width + 2;
+                }
+            }
+            x = 2;
+            y[0] += 24;
+
             List<string> categories = myParent.GetAllWaveFileCategories();
             for (int i = 0; i < categories.Count; i++)
             {
                 string category = categories[i];
                 int x_offset = i % 2 * (Width / 2);
-                if (!category.Equals("[none]")) {
-                    Label label = new Label();
-                    label.BackColor = Color.FromArgb(0, 0, 0, 0);
-                    label.ForeColor = Color.FromArgb(172, 172, 225);
-                    label.Font = new Font("Serif", 10, FontStyle.Bold);
-                    label.Text = category;
-                    label.Left = x + x_offset + 5;
-                    label.Top = y[i % 2];
-                    label.Height = 20;
-                    label.Width = Width / 2 - 40;
-                    Controls.Add(label);
-                    y[i % 2] += label.Height;
-                }
+                Label label = new Label();
+                label.BackColor = Color.FromArgb(0, 0, 0, 0);
+                label.ForeColor = Color.FromArgb(172, 172, 225);
+                label.Font = new Font("Serif", 10, FontStyle.Bold);
+                label.Text = category;
+                label.Left = x + x_offset + 5;
+                label.Top = y[i % 2];
+                label.Height = 20;
+                label.Width = Width / 2 - 40;
+                Controls.Add(label);
+                y[i % 2] += label.Height;
                 foreach (CategoryItem waveFile in myParent.WaveFiles)
                 {
                     if (waveFile.Category.Equals(category))

@@ -133,6 +133,16 @@ namespace Rainbow.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap fadeinfadeout {
+            get {
+                object obj = ResourceManager.GetObject("fadeinfadeout", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap fadeinsine {
             get {
                 object obj = ResourceManager.GetObject("fadeinsine", resourceCulture);
@@ -266,6 +276,16 @@ namespace Rainbow.Properties {
         internal static System.Drawing.Bitmap randomwave {
             get {
                 object obj = ResourceManager.GetObject("randomwave", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap repeatsmallest {
+            get {
+                object obj = ResourceManager.GetObject("repeatsmallest", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

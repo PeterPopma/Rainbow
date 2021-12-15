@@ -28,32 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.gradientButtonOk = new Rainbow.CustomControls.GradientButton();
             this.gradientButtonCancel = new Rainbow.CustomControls.GradientButton();
-            this.pictureBox11 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxOverlap = new System.Windows.Forms.PictureBox();
+            this.pictureBoxStretchToLargest = new System.Windows.Forms.PictureBox();
+            this.pictureBoxShrinkToSmallest = new System.Windows.Forms.PictureBox();
             this.labelStretchMode = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.pictureBoxRepeatSmallest = new System.Windows.Forms.PictureBox();
+            this.labelRepeatSmallest = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOverlap)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStretchToLargest)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxShrinkToSmallest)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRepeatSmallest)).BeginInit();
             this.SuspendLayout();
-            // 
-            // gradientButtonOk
-            // 
-            this.gradientButtonOk.Active = false;
-            this.gradientButtonOk.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gradientButtonOk.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.gradientButtonOk.HorizontalGradient = false;
-            this.gradientButtonOk.Location = new System.Drawing.Point(203, 222);
-            this.gradientButtonOk.Name = "gradientButtonOk";
-            this.gradientButtonOk.Size = new System.Drawing.Size(85, 22);
-            this.gradientButtonOk.TabIndex = 0;
-            this.gradientButtonOk.Text = "Ok";
-            this.gradientButtonOk.UseVisualStyleBackColor = true;
-            this.gradientButtonOk.Click += new System.EventHandler(this.gradientButtonApply_Click);
             // 
             // gradientButtonCancel
             // 
@@ -61,7 +49,7 @@
             this.gradientButtonCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.gradientButtonCancel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.gradientButtonCancel.HorizontalGradient = false;
-            this.gradientButtonCancel.Location = new System.Drawing.Point(363, 222);
+            this.gradientButtonCancel.Location = new System.Drawing.Point(181, 370);
             this.gradientButtonCancel.Name = "gradientButtonCancel";
             this.gradientButtonCancel.Size = new System.Drawing.Size(85, 22);
             this.gradientButtonCancel.TabIndex = 1;
@@ -69,41 +57,44 @@
             this.gradientButtonCancel.UseVisualStyleBackColor = true;
             this.gradientButtonCancel.Click += new System.EventHandler(this.gradientButtonCancel_Click);
             // 
-            // pictureBox11
+            // pictureBoxOverlap
             // 
-            this.pictureBox11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox11.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox11.Image = global::Rainbow.Properties.Resources.overlap;
-            this.pictureBox11.InitialImage = null;
-            this.pictureBox11.Location = new System.Drawing.Point(37, 26);
-            this.pictureBox11.Name = "pictureBox11";
-            this.pictureBox11.Size = new System.Drawing.Size(130, 102);
-            this.pictureBox11.TabIndex = 230;
-            this.pictureBox11.TabStop = false;
+            this.pictureBoxOverlap.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxOverlap.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxOverlap.Image = global::Rainbow.Properties.Resources.overlap;
+            this.pictureBoxOverlap.InitialImage = null;
+            this.pictureBoxOverlap.Location = new System.Drawing.Point(59, 27);
+            this.pictureBoxOverlap.Name = "pictureBoxOverlap";
+            this.pictureBoxOverlap.Size = new System.Drawing.Size(130, 102);
+            this.pictureBoxOverlap.TabIndex = 230;
+            this.pictureBoxOverlap.TabStop = false;
+            this.pictureBoxOverlap.Click += new System.EventHandler(this.pictureBoxOverlap_Click);
             // 
-            // pictureBox1
+            // pictureBoxStretchToLargest
             // 
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox1.Image = global::Rainbow.Properties.Resources.stretchtolargest;
-            this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(254, 26);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(130, 102);
-            this.pictureBox1.TabIndex = 231;
-            this.pictureBox1.TabStop = false;
+            this.pictureBoxStretchToLargest.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxStretchToLargest.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxStretchToLargest.Image = global::Rainbow.Properties.Resources.stretchtolargest;
+            this.pictureBoxStretchToLargest.InitialImage = null;
+            this.pictureBoxStretchToLargest.Location = new System.Drawing.Point(59, 205);
+            this.pictureBoxStretchToLargest.Name = "pictureBoxStretchToLargest";
+            this.pictureBoxStretchToLargest.Size = new System.Drawing.Size(130, 102);
+            this.pictureBoxStretchToLargest.TabIndex = 231;
+            this.pictureBoxStretchToLargest.TabStop = false;
+            this.pictureBoxStretchToLargest.Click += new System.EventHandler(this.pictureBoxStretchToLargest_Click);
             // 
-            // pictureBox2
+            // pictureBoxShrinkToSmallest
             // 
-            this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox2.Image = global::Rainbow.Properties.Resources.shrinktosmallest;
-            this.pictureBox2.InitialImage = null;
-            this.pictureBox2.Location = new System.Drawing.Point(466, 26);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(130, 102);
-            this.pictureBox2.TabIndex = 232;
-            this.pictureBox2.TabStop = false;
+            this.pictureBoxShrinkToSmallest.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxShrinkToSmallest.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxShrinkToSmallest.Image = global::Rainbow.Properties.Resources.shrinktosmallest;
+            this.pictureBoxShrinkToSmallest.InitialImage = null;
+            this.pictureBoxShrinkToSmallest.Location = new System.Drawing.Point(268, 205);
+            this.pictureBoxShrinkToSmallest.Name = "pictureBoxShrinkToSmallest";
+            this.pictureBoxShrinkToSmallest.Size = new System.Drawing.Size(130, 102);
+            this.pictureBoxShrinkToSmallest.TabIndex = 232;
+            this.pictureBoxShrinkToSmallest.TabStop = false;
+            this.pictureBoxShrinkToSmallest.Click += new System.EventHandler(this.pictureBoxShrinkToSmallest_Click);
             // 
             // labelStretchMode
             // 
@@ -111,7 +102,7 @@
             this.labelStretchMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.labelStretchMode.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelStretchMode.ForeColor = System.Drawing.Color.White;
-            this.labelStretchMode.Location = new System.Drawing.Point(40, 131);
+            this.labelStretchMode.Location = new System.Drawing.Point(62, 132);
             this.labelStretchMode.Name = "labelStretchMode";
             this.labelStretchMode.Size = new System.Drawing.Size(126, 30);
             this.labelStretchMode.TabIndex = 233;
@@ -123,7 +114,7 @@
             this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.label1.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(238, 131);
+            this.label1.Location = new System.Drawing.Point(43, 310);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(163, 30);
             this.label1.TabIndex = 234;
@@ -135,25 +126,51 @@
             this.label2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.label2.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(443, 131);
+            this.label2.Location = new System.Drawing.Point(239, 310);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(176, 30);
             this.label2.TabIndex = 235;
             this.label2.Text = "Shrink to smallest";
             // 
+            // pictureBoxRepeatSmallest
+            // 
+            this.pictureBoxRepeatSmallest.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxRepeatSmallest.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxRepeatSmallest.Image = global::Rainbow.Properties.Resources.repeatsmallest;
+            this.pictureBoxRepeatSmallest.InitialImage = null;
+            this.pictureBoxRepeatSmallest.Location = new System.Drawing.Point(268, 27);
+            this.pictureBoxRepeatSmallest.Name = "pictureBoxRepeatSmallest";
+            this.pictureBoxRepeatSmallest.Size = new System.Drawing.Size(130, 102);
+            this.pictureBoxRepeatSmallest.TabIndex = 236;
+            this.pictureBoxRepeatSmallest.TabStop = false;
+            this.pictureBoxRepeatSmallest.Click += new System.EventHandler(this.pictureBoxRepeatSmallest_Click);
+            // 
+            // labelRepeatSmallest
+            // 
+            this.labelRepeatSmallest.AutoSize = true;
+            this.labelRepeatSmallest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.labelRepeatSmallest.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelRepeatSmallest.ForeColor = System.Drawing.Color.White;
+            this.labelRepeatSmallest.Location = new System.Drawing.Point(253, 132);
+            this.labelRepeatSmallest.Name = "labelRepeatSmallest";
+            this.labelRepeatSmallest.Size = new System.Drawing.Size(158, 30);
+            this.labelRepeatSmallest.TabIndex = 237;
+            this.labelRepeatSmallest.Text = "Repeat smallest";
+            // 
             // FormStretchMode
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(649, 268);
+            this.ClientSize = new System.Drawing.Size(459, 415);
+            this.Controls.Add(this.labelRepeatSmallest);
+            this.Controls.Add(this.pictureBoxRepeatSmallest);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.labelStretchMode);
-            this.Controls.Add(this.pictureBox2);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.pictureBox11);
+            this.Controls.Add(this.pictureBoxShrinkToSmallest);
+            this.Controls.Add(this.pictureBoxStretchToLargest);
+            this.Controls.Add(this.pictureBoxOverlap);
             this.Controls.Add(this.gradientButtonCancel);
-            this.Controls.Add(this.gradientButtonOk);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
@@ -163,23 +180,24 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Stretch Mode";
             this.Load += new System.EventHandler(this.FormAddPreset_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOverlap)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStretchToLargest)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxShrinkToSmallest)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRepeatSmallest)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private CustomControls.GradientButton gradientButtonOk;
         private CustomControls.GradientButton gradientButtonCancel;
-        private System.Windows.Forms.PictureBox pictureBox11;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox pictureBoxOverlap;
+        private System.Windows.Forms.PictureBox pictureBoxStretchToLargest;
+        private System.Windows.Forms.PictureBox pictureBoxShrinkToSmallest;
         internal System.Windows.Forms.Label labelStretchMode;
         internal System.Windows.Forms.Label label1;
         internal System.Windows.Forms.Label label2;
+        private System.Windows.Forms.PictureBox pictureBoxRepeatSmallest;
+        internal System.Windows.Forms.Label labelRepeatSmallest;
     }
 }

@@ -50,5 +50,49 @@ namespace Rainbow.UI
         {
         }
 
+        private void pictureBoxAlternateSquare_Click(object sender, EventArgs e)
+        {
+            myParent.SynthGenerator.MixMode = 3;
+            myParent.SynthGenerator.NumMixWaves = (int)numericUpDownSquared.Value;
+            myParent.UpdateMixMode();
+            Close();
+        }
+
+        private void pictureBoxAlternateTriangle_Click(object sender, EventArgs e)
+        {
+            myParent.SynthGenerator.MixMode = 4;
+            myParent.SynthGenerator.NumMixWaves = (int)numericUpDownTriangle.Value;
+            myParent.UpdateMixMode();
+            Close();
+        }
+
+        private void pictureBoxAlternateSine_Click(object sender, EventArgs e)
+        {
+            myParent.SynthGenerator.MixMode = 5;
+            myParent.SynthGenerator.NumMixWaves = (int)numericUpDownSine.Value;
+            myParent.UpdateMixMode();
+            Close();
+        }
+
+        private void pictureBoxMultiply_Click(object sender, EventArgs e)
+        {
+            myParent.SynthGenerator.MixMode = 2;
+            myParent.UpdateMixMode();
+            Close();
+        }
+
+        private void pictureBoxSameWeight_Click(object sender, EventArgs e)
+        {
+            myParent.SynthGenerator.MixMode = 1;
+            myParent.UpdateMixMode();
+            Close();
+        }
+
+        private void pictureBoxFadeInOut_Click(object sender, EventArgs e)
+        {
+            myParent.SynthGenerator.MixMode = 0;
+            myParent.UpdateMixMode();
+            Close();
+        }
     }
 }

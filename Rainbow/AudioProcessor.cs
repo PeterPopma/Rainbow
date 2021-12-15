@@ -37,22 +37,9 @@
         /// <remarks>This method is used to push midi events to the host.</remarks>
         public override void Process(VstAudioBuffer[] inChannels, VstAudioBuffer[] outChannels)
         {
-            /*
-            if (_hostProcessor != null &&
-                _midiProcessor != null &&
-                _midiProcessor.Events.Count > 0)
-            {
-                // we use the AudioProcessor as a trigger to process Midi
-                _hostProcessor.Process(_midiProcessor.Events);
-                _midiProcessor.Events.Clear();
-            }*/
             synthGenerator.Play(outChannels);
-/*
-            else // audio thru
-            {
-                base.Process(inChannels, outChannels);
-            }
-*/
+
+            // base.Process(inChannels, outChannels);      // audio thru
         }
     }
 }

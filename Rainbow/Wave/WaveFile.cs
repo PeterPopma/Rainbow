@@ -33,18 +33,18 @@ namespace Rainbow.Wave
             writer.Write((ushort)bitsPerSample);            // bits per sample
 
             // Convert synth data to wav format (interleaved)
-            waveExportData.audioData = new int[waveInfo.WaveFileDataLeft.Length*2];
-            for (int i = 0; i < waveInfo.WaveFileDataLeft.Length; i++)
+            waveExportData.audioData = new int[waveInfo.WaveFileData1Left.Length*2];
+            for (int i = 0; i < waveInfo.WaveFileData1Left.Length; i++)
             {
                 if (bitsPerSample == 32)
                 {
-                    waveExportData.audioData[i * 2] = (int)(waveInfo.WaveFileDataLeft[i] * 65536);
-                    waveExportData.audioData[i * 2 + 1] = (int)(waveInfo.WaveFileDataRight[i] * 65536);
+                    waveExportData.audioData[i * 2] = (int)(waveInfo.WaveFileData1Left[i] * 65536);
+                    waveExportData.audioData[i * 2 + 1] = (int)(waveInfo.WaveFileData1Right[i] * 65536);
                 }
                 else
                 {
-                    waveExportData.audioData[i * 2] = (int)waveInfo.WaveFileDataLeft[i];
-                    waveExportData.audioData[i * 2 + 1] = (int)waveInfo.WaveFileDataRight[i];
+                    waveExportData.audioData[i * 2] = (int)waveInfo.WaveFileData1Left[i];
+                    waveExportData.audioData[i * 2 + 1] = (int)waveInfo.WaveFileData1Right[i];
                 }
             }
 
@@ -69,9 +69,9 @@ namespace Rainbow.Wave
             }
         }
 
-        public static void SaveToDisk(WaveInfo waveInfo, int samplesPerSecond, int bitsPerSample)
+        public static void SaveToDisk(string fileName, WaveInfo waveInfo, int samplesPerSecond, int bitsPerSample)
         {
-            using (FileStream fileStream = new FileStream(waveInfo.WaveFileName, FileMode.Create))
+            using (FileStream fileStream = new FileStream(fileName, FileMode.Create))
             using (BinaryWriter writer = new BinaryWriter(fileStream))
             {
                 WriteWaveData(writer, waveInfo, samplesPerSecond, bitsPerSample);
@@ -86,16 +86,16 @@ namespace Rainbow.Wave
         // load a .wav file. Supported is PCM, mono/stereo, 8/16/24 bits, all samplerates.
         // loaded file is transformed into a 44100 Kz 16 bits stereo stream. 
         // if the source is mono, the data is copied to both streams
-        public static void LoadFromDisk(WaveInfo waveInfo, int samplesPerSecond, ref float[] leftChannel, ref float[] rightChannel)
+        public static void LoadFromDisk(string fileName, WaveInfo waveInfo, int samplesPerSecond, int soundNumber)
         {
-            using (WaveFileReader reader = new WaveFileReader(waveInfo.WaveFileName))
+            using (WaveFileReader reader = new WaveFileReader(fileName))
             {
                 byte[] buffer = new byte[reader.Length];
                 int read = reader.Read(buffer, 0, buffer.Length);
                 double sampleRatio = samplesPerSecond / (double)reader.WaveFormat.SampleRate;
                 int numSamplesDestination = (int)(reader.SampleCount * sampleRatio);       // number of samples in final result (44100 * duration in s)
-                leftChannel = new float[numSamplesDestination];            // output=2 channels
-                rightChannel = new float[numSamplesDestination];            // output=2 channels
+                float[] leftChannel = new float[numSamplesDestination];            // output=2 channels
+                float[] rightChannel = new float[numSamplesDestination];            // output=2 channels
 
                 for (int destSampleNumber = 0; destSampleNumber < numSamplesDestination; destSampleNumber++)
                 {
@@ -171,6 +171,19 @@ namespace Rainbow.Wave
                         }
 
                     }
+                }
+
+                if (soundNumber == 1)
+                {
+                    waveInfo.WaveFileData1Left = leftChannel;
+                    waveInfo.WaveFileData1Right = rightChannel;
+                    System.Diagnostics.Debug.WriteLine("Read file sized: " + waveInfo.WaveFileData1Left.Length);
+                }
+                else
+                {
+                    waveInfo.WaveFileData2Left = leftChannel;
+                    waveInfo.WaveFileData2Right = rightChannel;
+                    System.Diagnostics.Debug.WriteLine("Read file sized: " + waveInfo.WaveFileData2Left.Length);
                 }
             }
         }

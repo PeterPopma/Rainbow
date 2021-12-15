@@ -43,19 +43,27 @@ namespace Rainbow.UI
             this.pictureBoxTitle = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panelMixMode = new System.Windows.Forms.Panel();
-            this.labelMixMode = new System.Windows.Forms.Label();
+            this.gradientButtonNextMixMode = new Rainbow.CustomControls.GradientButton();
+            this.gradientButtonPreviousMixMode = new Rainbow.CustomControls.GradientButton();
             this.pictureBoxMixMode = new System.Windows.Forms.PictureBox();
+            this.labelMixMode = new System.Windows.Forms.Label();
             this.panelSound2 = new System.Windows.Forms.Panel();
+            this.gradientButtonNextSound2 = new Rainbow.CustomControls.GradientButton();
+            this.gradientButtonPreviousSound2 = new Rainbow.CustomControls.GradientButton();
             this.checkBoxInvert2 = new System.Windows.Forms.CheckBox();
             this.pictureBoxVolume2 = new System.Windows.Forms.PictureBox();
             this.label11 = new System.Windows.Forms.Label();
             this.labelSecondary = new System.Windows.Forms.Label();
             this.panelRepeatPart = new System.Windows.Forms.Panel();
             this.panelStretchMode = new System.Windows.Forms.Panel();
-            this.labelStretchMode = new System.Windows.Forms.Label();
+            this.gradientButtonNextStretchMode = new Rainbow.CustomControls.GradientButton();
+            this.gradientButtonPreviousStretchMode = new Rainbow.CustomControls.GradientButton();
             this.pictureBoxStretchMode = new System.Windows.Forms.PictureBox();
+            this.labelStretchMode = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.panelSound1 = new System.Windows.Forms.Panel();
+            this.gradientButtonNextSound1 = new Rainbow.CustomControls.GradientButton();
+            this.gradientButtonPreviousSound1 = new Rainbow.CustomControls.GradientButton();
             this.checkBoxInvert1 = new System.Windows.Forms.CheckBox();
             this.pictureBoxVolume1 = new System.Windows.Forms.PictureBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -77,14 +85,6 @@ namespace Rainbow.UI
             this.label10 = new System.Windows.Forms.Label();
             this.gradientButtonPreviousWave = new Rainbow.CustomControls.GradientButton();
             this.gradientButtonNextWave = new Rainbow.CustomControls.GradientButton();
-            this.gradientButtonPreviousSound1 = new Rainbow.CustomControls.GradientButton();
-            this.gradientButtonNextSound1 = new Rainbow.CustomControls.GradientButton();
-            this.gradientButtonPreviousSound2 = new Rainbow.CustomControls.GradientButton();
-            this.gradientButtonNextSound2 = new Rainbow.CustomControls.GradientButton();
-            this.gradientButtonNextStretchMode = new Rainbow.CustomControls.GradientButton();
-            this.gradientButtonPreviousStretchMode = new Rainbow.CustomControls.GradientButton();
-            this.gradientButtonNextMixMode = new Rainbow.CustomControls.GradientButton();
-            this.gradientButtonPreviousMixMode = new Rainbow.CustomControls.GradientButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRepeat)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTitle)).BeginInit();
             this.panel1.SuspendLayout();
@@ -246,24 +246,40 @@ namespace Rainbow.UI
             this.panelMixMode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelMixMode.Controls.Add(this.gradientButtonNextMixMode);
             this.panelMixMode.Controls.Add(this.gradientButtonPreviousMixMode);
-            this.panelMixMode.Controls.Add(this.labelMixMode);
             this.panelMixMode.Controls.Add(this.pictureBoxMixMode);
+            this.panelMixMode.Controls.Add(this.labelMixMode);
             this.panelMixMode.Location = new System.Drawing.Point(291, 221);
             this.panelMixMode.Name = "panelMixMode";
             this.panelMixMode.Size = new System.Drawing.Size(271, 154);
             this.panelMixMode.TabIndex = 52;
             // 
-            // labelMixMode
+            // gradientButtonNextMixMode
             // 
-            this.labelMixMode.AutoSize = true;
-            this.labelMixMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.labelMixMode.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.labelMixMode.ForeColor = System.Drawing.Color.White;
-            this.labelMixMode.Location = new System.Drawing.Point(98, 114);
-            this.labelMixMode.Name = "labelMixMode";
-            this.labelMixMode.Size = new System.Drawing.Size(101, 30);
-            this.labelMixMode.TabIndex = 54;
-            this.labelMixMode.Text = "MixMode";
+            this.gradientButtonNextMixMode.Active = false;
+            this.gradientButtonNextMixMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.gradientButtonNextMixMode.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.gradientButtonNextMixMode.HorizontalGradient = false;
+            this.gradientButtonNextMixMode.Location = new System.Drawing.Point(53, 46);
+            this.gradientButtonNextMixMode.Name = "gradientButtonNextMixMode";
+            this.gradientButtonNextMixMode.Size = new System.Drawing.Size(23, 41);
+            this.gradientButtonNextMixMode.TabIndex = 56;
+            this.gradientButtonNextMixMode.Text = ">";
+            this.gradientButtonNextMixMode.UseVisualStyleBackColor = true;
+            this.gradientButtonNextMixMode.Click += new System.EventHandler(this.gradientButtonNextMixMode_Click);
+            // 
+            // gradientButtonPreviousMixMode
+            // 
+            this.gradientButtonPreviousMixMode.Active = false;
+            this.gradientButtonPreviousMixMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.gradientButtonPreviousMixMode.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.gradientButtonPreviousMixMode.HorizontalGradient = false;
+            this.gradientButtonPreviousMixMode.Location = new System.Drawing.Point(24, 46);
+            this.gradientButtonPreviousMixMode.Name = "gradientButtonPreviousMixMode";
+            this.gradientButtonPreviousMixMode.Size = new System.Drawing.Size(23, 41);
+            this.gradientButtonPreviousMixMode.TabIndex = 55;
+            this.gradientButtonPreviousMixMode.Text = "<";
+            this.gradientButtonPreviousMixMode.UseVisualStyleBackColor = true;
+            this.gradientButtonPreviousMixMode.Click += new System.EventHandler(this.gradientButtonPreviousMixMode_Click);
             // 
             // pictureBoxMixMode
             // 
@@ -275,6 +291,18 @@ namespace Rainbow.UI
             this.pictureBoxMixMode.TabIndex = 50;
             this.pictureBoxMixMode.TabStop = false;
             this.pictureBoxMixMode.Click += new System.EventHandler(this.pictureBoxMixMode_Click_1);
+            // 
+            // labelMixMode
+            // 
+            this.labelMixMode.AutoSize = true;
+            this.labelMixMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.labelMixMode.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelMixMode.ForeColor = System.Drawing.Color.White;
+            this.labelMixMode.Location = new System.Drawing.Point(34, 113);
+            this.labelMixMode.Name = "labelMixMode";
+            this.labelMixMode.Size = new System.Drawing.Size(232, 30);
+            this.labelMixMode.TabIndex = 54;
+            this.labelMixMode.Text = "Alternate Squared (20X)";
             // 
             // panelSound2
             // 
@@ -293,6 +321,34 @@ namespace Rainbow.UI
             this.panelSound2.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSecondarySound_Paint);
             this.panelSound2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelSecondarySound_MouseClick);
             // 
+            // gradientButtonNextSound2
+            // 
+            this.gradientButtonNextSound2.Active = false;
+            this.gradientButtonNextSound2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.gradientButtonNextSound2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.gradientButtonNextSound2.HorizontalGradient = false;
+            this.gradientButtonNextSound2.Location = new System.Drawing.Point(38, 40);
+            this.gradientButtonNextSound2.Name = "gradientButtonNextSound2";
+            this.gradientButtonNextSound2.Size = new System.Drawing.Size(23, 41);
+            this.gradientButtonNextSound2.TabIndex = 54;
+            this.gradientButtonNextSound2.Text = ">";
+            this.gradientButtonNextSound2.UseVisualStyleBackColor = true;
+            this.gradientButtonNextSound2.Click += new System.EventHandler(this.gradientButtonNextSecondary_Click);
+            // 
+            // gradientButtonPreviousSound2
+            // 
+            this.gradientButtonPreviousSound2.Active = false;
+            this.gradientButtonPreviousSound2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.gradientButtonPreviousSound2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.gradientButtonPreviousSound2.HorizontalGradient = false;
+            this.gradientButtonPreviousSound2.Location = new System.Drawing.Point(9, 40);
+            this.gradientButtonPreviousSound2.Name = "gradientButtonPreviousSound2";
+            this.gradientButtonPreviousSound2.Size = new System.Drawing.Size(23, 41);
+            this.gradientButtonPreviousSound2.TabIndex = 53;
+            this.gradientButtonPreviousSound2.Text = "<";
+            this.gradientButtonPreviousSound2.UseVisualStyleBackColor = true;
+            this.gradientButtonPreviousSound2.Click += new System.EventHandler(this.gradientButtonPreviousSecondary_Click);
+            // 
             // checkBoxInvert2
             // 
             this.checkBoxInvert2.AutoSize = true;
@@ -304,6 +360,7 @@ namespace Rainbow.UI
             this.checkBoxInvert2.Text = "invert";
             this.checkBoxInvert2.UseVisualStyleBackColor = true;
             this.checkBoxInvert2.CheckedChanged += new System.EventHandler(this.checkBoxInvert2_CheckedChanged);
+            this.checkBoxInvert2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.checkBoxInvert2_MouseUp);
             // 
             // pictureBoxVolume2
             // 
@@ -365,24 +422,40 @@ namespace Rainbow.UI
             this.panelStretchMode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelStretchMode.Controls.Add(this.gradientButtonNextStretchMode);
             this.panelStretchMode.Controls.Add(this.gradientButtonPreviousStretchMode);
-            this.panelStretchMode.Controls.Add(this.labelStretchMode);
             this.panelStretchMode.Controls.Add(this.pictureBoxStretchMode);
+            this.panelStretchMode.Controls.Add(this.labelStretchMode);
             this.panelStretchMode.Location = new System.Drawing.Point(12, 221);
             this.panelStretchMode.Name = "panelStretchMode";
             this.panelStretchMode.Size = new System.Drawing.Size(273, 154);
             this.panelStretchMode.TabIndex = 44;
             // 
-            // labelStretchMode
+            // gradientButtonNextStretchMode
             // 
-            this.labelStretchMode.AutoSize = true;
-            this.labelStretchMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.labelStretchMode.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.labelStretchMode.ForeColor = System.Drawing.Color.White;
-            this.labelStretchMode.Location = new System.Drawing.Point(98, 117);
-            this.labelStretchMode.Name = "labelStretchMode";
-            this.labelStretchMode.Size = new System.Drawing.Size(131, 30);
-            this.labelStretchMode.TabIndex = 54;
-            this.labelStretchMode.Text = "StretchMode";
+            this.gradientButtonNextStretchMode.Active = false;
+            this.gradientButtonNextStretchMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.gradientButtonNextStretchMode.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.gradientButtonNextStretchMode.HorizontalGradient = false;
+            this.gradientButtonNextStretchMode.Location = new System.Drawing.Point(54, 47);
+            this.gradientButtonNextStretchMode.Name = "gradientButtonNextStretchMode";
+            this.gradientButtonNextStretchMode.Size = new System.Drawing.Size(23, 41);
+            this.gradientButtonNextStretchMode.TabIndex = 56;
+            this.gradientButtonNextStretchMode.Text = ">";
+            this.gradientButtonNextStretchMode.UseVisualStyleBackColor = true;
+            this.gradientButtonNextStretchMode.Click += new System.EventHandler(this.gradientButtonNextStretchMode_Click);
+            // 
+            // gradientButtonPreviousStretchMode
+            // 
+            this.gradientButtonPreviousStretchMode.Active = false;
+            this.gradientButtonPreviousStretchMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.gradientButtonPreviousStretchMode.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.gradientButtonPreviousStretchMode.HorizontalGradient = false;
+            this.gradientButtonPreviousStretchMode.Location = new System.Drawing.Point(25, 47);
+            this.gradientButtonPreviousStretchMode.Name = "gradientButtonPreviousStretchMode";
+            this.gradientButtonPreviousStretchMode.Size = new System.Drawing.Size(23, 41);
+            this.gradientButtonPreviousStretchMode.TabIndex = 55;
+            this.gradientButtonPreviousStretchMode.Text = "<";
+            this.gradientButtonPreviousStretchMode.UseVisualStyleBackColor = true;
+            this.gradientButtonPreviousStretchMode.Click += new System.EventHandler(this.gradientButtonPreviousStretchMode_Click);
             // 
             // pictureBoxStretchMode
             // 
@@ -394,6 +467,18 @@ namespace Rainbow.UI
             this.pictureBoxStretchMode.TabIndex = 50;
             this.pictureBoxStretchMode.TabStop = false;
             this.pictureBoxStretchMode.Click += new System.EventHandler(this.pictureBoxMixMode_Click);
+            // 
+            // labelStretchMode
+            // 
+            this.labelStretchMode.AutoSize = true;
+            this.labelStretchMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.labelStretchMode.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelStretchMode.ForeColor = System.Drawing.Color.White;
+            this.labelStretchMode.Location = new System.Drawing.Point(92, 116);
+            this.labelStretchMode.Name = "labelStretchMode";
+            this.labelStretchMode.Size = new System.Drawing.Size(131, 30);
+            this.labelStretchMode.TabIndex = 54;
+            this.labelStretchMode.Text = "StretchMode";
             // 
             // label8
             // 
@@ -424,6 +509,34 @@ namespace Rainbow.UI
             this.panelSound1.Paint += new System.Windows.Forms.PaintEventHandler(this.panelBaseSound_Paint);
             this.panelSound1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelBaseSound_MouseClick);
             // 
+            // gradientButtonNextSound1
+            // 
+            this.gradientButtonNextSound1.Active = false;
+            this.gradientButtonNextSound1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.gradientButtonNextSound1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.gradientButtonNextSound1.HorizontalGradient = false;
+            this.gradientButtonNextSound1.Location = new System.Drawing.Point(38, 39);
+            this.gradientButtonNextSound1.Name = "gradientButtonNextSound1";
+            this.gradientButtonNextSound1.Size = new System.Drawing.Size(23, 41);
+            this.gradientButtonNextSound1.TabIndex = 53;
+            this.gradientButtonNextSound1.Text = ">";
+            this.gradientButtonNextSound1.UseVisualStyleBackColor = true;
+            this.gradientButtonNextSound1.Click += new System.EventHandler(this.gradientButtonNextWave_Click);
+            // 
+            // gradientButtonPreviousSound1
+            // 
+            this.gradientButtonPreviousSound1.Active = false;
+            this.gradientButtonPreviousSound1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.gradientButtonPreviousSound1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.gradientButtonPreviousSound1.HorizontalGradient = false;
+            this.gradientButtonPreviousSound1.Location = new System.Drawing.Point(9, 39);
+            this.gradientButtonPreviousSound1.Name = "gradientButtonPreviousSound1";
+            this.gradientButtonPreviousSound1.Size = new System.Drawing.Size(23, 41);
+            this.gradientButtonPreviousSound1.TabIndex = 52;
+            this.gradientButtonPreviousSound1.Text = "<";
+            this.gradientButtonPreviousSound1.UseVisualStyleBackColor = true;
+            this.gradientButtonPreviousSound1.Click += new System.EventHandler(this.gradientButtonPreviousWave_Click);
+            // 
             // checkBoxInvert1
             // 
             this.checkBoxInvert1.AutoSize = true;
@@ -435,6 +548,7 @@ namespace Rainbow.UI
             this.checkBoxInvert1.Text = "invert";
             this.checkBoxInvert1.UseVisualStyleBackColor = true;
             this.checkBoxInvert1.CheckedChanged += new System.EventHandler(this.checkBoxInvert1_CheckedChanged);
+            this.checkBoxInvert1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.checkBoxInvert1_MouseUp);
             // 
             // pictureBoxVolume1
             // 
@@ -694,118 +808,6 @@ namespace Rainbow.UI
             this.gradientButtonNextWave.Text = ">";
             this.gradientButtonNextWave.UseVisualStyleBackColor = true;
             this.gradientButtonNextWave.Click += new System.EventHandler(this.gradientButtonNextWave_Click);
-            // 
-            // gradientButtonPreviousSound1
-            // 
-            this.gradientButtonPreviousSound1.Active = false;
-            this.gradientButtonPreviousSound1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gradientButtonPreviousSound1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.gradientButtonPreviousSound1.HorizontalGradient = false;
-            this.gradientButtonPreviousSound1.Location = new System.Drawing.Point(9, 39);
-            this.gradientButtonPreviousSound1.Name = "gradientButtonPreviousSound1";
-            this.gradientButtonPreviousSound1.Size = new System.Drawing.Size(23, 41);
-            this.gradientButtonPreviousSound1.TabIndex = 52;
-            this.gradientButtonPreviousSound1.Text = "<";
-            this.gradientButtonPreviousSound1.UseVisualStyleBackColor = true;
-            this.gradientButtonPreviousSound1.Click += new System.EventHandler(this.gradientButtonPreviousWave_Click);
-            // 
-            // gradientButtonNextSound1
-            // 
-            this.gradientButtonNextSound1.Active = false;
-            this.gradientButtonNextSound1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gradientButtonNextSound1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.gradientButtonNextSound1.HorizontalGradient = false;
-            this.gradientButtonNextSound1.Location = new System.Drawing.Point(38, 39);
-            this.gradientButtonNextSound1.Name = "gradientButtonNextSound1";
-            this.gradientButtonNextSound1.Size = new System.Drawing.Size(23, 41);
-            this.gradientButtonNextSound1.TabIndex = 53;
-            this.gradientButtonNextSound1.Text = ">";
-            this.gradientButtonNextSound1.UseVisualStyleBackColor = true;
-            this.gradientButtonNextSound1.Click += new System.EventHandler(this.gradientButtonNextWave_Click);
-            // 
-            // gradientButtonPreviousSound2
-            // 
-            this.gradientButtonPreviousSound2.Active = false;
-            this.gradientButtonPreviousSound2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gradientButtonPreviousSound2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.gradientButtonPreviousSound2.HorizontalGradient = false;
-            this.gradientButtonPreviousSound2.Location = new System.Drawing.Point(9, 40);
-            this.gradientButtonPreviousSound2.Name = "gradientButtonPreviousSound2";
-            this.gradientButtonPreviousSound2.Size = new System.Drawing.Size(23, 41);
-            this.gradientButtonPreviousSound2.TabIndex = 53;
-            this.gradientButtonPreviousSound2.Text = "<";
-            this.gradientButtonPreviousSound2.UseVisualStyleBackColor = true;
-            this.gradientButtonPreviousSound2.Click += new System.EventHandler(this.gradientButtonPreviousSecondary_Click);
-            // 
-            // gradientButtonNextSound2
-            // 
-            this.gradientButtonNextSound2.Active = false;
-            this.gradientButtonNextSound2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gradientButtonNextSound2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.gradientButtonNextSound2.HorizontalGradient = false;
-            this.gradientButtonNextSound2.Location = new System.Drawing.Point(38, 40);
-            this.gradientButtonNextSound2.Name = "gradientButtonNextSound2";
-            this.gradientButtonNextSound2.Size = new System.Drawing.Size(23, 41);
-            this.gradientButtonNextSound2.TabIndex = 54;
-            this.gradientButtonNextSound2.Text = ">";
-            this.gradientButtonNextSound2.UseVisualStyleBackColor = true;
-            this.gradientButtonNextSound2.Click += new System.EventHandler(this.gradientButtonNextSecondary_Click);
-            // 
-            // gradientButtonNextStretchMode
-            // 
-            this.gradientButtonNextStretchMode.Active = false;
-            this.gradientButtonNextStretchMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gradientButtonNextStretchMode.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.gradientButtonNextStretchMode.HorizontalGradient = false;
-            this.gradientButtonNextStretchMode.Location = new System.Drawing.Point(54, 47);
-            this.gradientButtonNextStretchMode.Name = "gradientButtonNextStretchMode";
-            this.gradientButtonNextStretchMode.Size = new System.Drawing.Size(23, 41);
-            this.gradientButtonNextStretchMode.TabIndex = 56;
-            this.gradientButtonNextStretchMode.Text = ">";
-            this.gradientButtonNextStretchMode.UseVisualStyleBackColor = true;
-            this.gradientButtonNextStretchMode.Click += new System.EventHandler(this.gradientButtonNextStretchMode_Click);
-            // 
-            // gradientButtonPreviousStretchMode
-            // 
-            this.gradientButtonPreviousStretchMode.Active = false;
-            this.gradientButtonPreviousStretchMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gradientButtonPreviousStretchMode.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.gradientButtonPreviousStretchMode.HorizontalGradient = false;
-            this.gradientButtonPreviousStretchMode.Location = new System.Drawing.Point(25, 47);
-            this.gradientButtonPreviousStretchMode.Name = "gradientButtonPreviousStretchMode";
-            this.gradientButtonPreviousStretchMode.Size = new System.Drawing.Size(23, 41);
-            this.gradientButtonPreviousStretchMode.TabIndex = 55;
-            this.gradientButtonPreviousStretchMode.Text = "<";
-            this.gradientButtonPreviousStretchMode.UseVisualStyleBackColor = true;
-            this.gradientButtonPreviousStretchMode.Click += new System.EventHandler(this.gradientButtonPreviousStretchMode_Click);
-            // 
-            // gradientButtonNextMixMode
-            // 
-            this.gradientButtonNextMixMode.Active = false;
-            this.gradientButtonNextMixMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gradientButtonNextMixMode.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.gradientButtonNextMixMode.HorizontalGradient = false;
-            this.gradientButtonNextMixMode.Location = new System.Drawing.Point(53, 46);
-            this.gradientButtonNextMixMode.Name = "gradientButtonNextMixMode";
-            this.gradientButtonNextMixMode.Size = new System.Drawing.Size(23, 41);
-            this.gradientButtonNextMixMode.TabIndex = 56;
-            this.gradientButtonNextMixMode.Text = ">";
-            this.gradientButtonNextMixMode.UseVisualStyleBackColor = true;
-            this.gradientButtonNextMixMode.Click += new System.EventHandler(this.gradientButtonNextMixMode_Click);
-            // 
-            // gradientButtonPreviousMixMode
-            // 
-            this.gradientButtonPreviousMixMode.Active = false;
-            this.gradientButtonPreviousMixMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gradientButtonPreviousMixMode.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.gradientButtonPreviousMixMode.HorizontalGradient = false;
-            this.gradientButtonPreviousMixMode.Location = new System.Drawing.Point(24, 46);
-            this.gradientButtonPreviousMixMode.Name = "gradientButtonPreviousMixMode";
-            this.gradientButtonPreviousMixMode.Size = new System.Drawing.Size(23, 41);
-            this.gradientButtonPreviousMixMode.TabIndex = 55;
-            this.gradientButtonPreviousMixMode.Text = "<";
-            this.gradientButtonPreviousMixMode.UseVisualStyleBackColor = true;
-            this.gradientButtonPreviousMixMode.Click += new System.EventHandler(this.gradientButtonPreviousMixMode_Click);
             // 
             // FormMain
             // 
