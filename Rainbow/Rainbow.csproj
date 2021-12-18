@@ -13,6 +13,7 @@
     <AssemblyName>Rainbow</AssemblyName>
     <RootNamespace>Rainbow</RootNamespace>
     <PackageId>Rainbow</PackageId>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

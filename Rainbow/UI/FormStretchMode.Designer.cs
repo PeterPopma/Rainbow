@@ -49,7 +49,7 @@
             this.gradientButtonCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.gradientButtonCancel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.gradientButtonCancel.HorizontalGradient = false;
-            this.gradientButtonCancel.Location = new System.Drawing.Point(181, 370);
+            this.gradientButtonCancel.Location = new System.Drawing.Point(190, 368);
             this.gradientButtonCancel.Name = "gradientButtonCancel";
             this.gradientButtonCancel.Size = new System.Drawing.Size(85, 22);
             this.gradientButtonCancel.TabIndex = 1;
@@ -76,7 +76,7 @@
             this.pictureBoxStretchToLargest.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBoxStretchToLargest.Image = global::Rainbow.Properties.Resources.stretchtolargest;
             this.pictureBoxStretchToLargest.InitialImage = null;
-            this.pictureBoxStretchToLargest.Location = new System.Drawing.Point(59, 205);
+            this.pictureBoxStretchToLargest.Location = new System.Drawing.Point(59, 194);
             this.pictureBoxStretchToLargest.Name = "pictureBoxStretchToLargest";
             this.pictureBoxStretchToLargest.Size = new System.Drawing.Size(130, 102);
             this.pictureBoxStretchToLargest.TabIndex = 231;
@@ -89,7 +89,7 @@
             this.pictureBoxShrinkToSmallest.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBoxShrinkToSmallest.Image = global::Rainbow.Properties.Resources.shrinktosmallest;
             this.pictureBoxShrinkToSmallest.InitialImage = null;
-            this.pictureBoxShrinkToSmallest.Location = new System.Drawing.Point(268, 205);
+            this.pictureBoxShrinkToSmallest.Location = new System.Drawing.Point(276, 194);
             this.pictureBoxShrinkToSmallest.Name = "pictureBoxShrinkToSmallest";
             this.pictureBoxShrinkToSmallest.Size = new System.Drawing.Size(130, 102);
             this.pictureBoxShrinkToSmallest.TabIndex = 232;
@@ -102,7 +102,7 @@
             this.labelStretchMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.labelStretchMode.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelStretchMode.ForeColor = System.Drawing.Color.White;
-            this.labelStretchMode.Location = new System.Drawing.Point(62, 132);
+            this.labelStretchMode.Location = new System.Drawing.Point(59, 132);
             this.labelStretchMode.Name = "labelStretchMode";
             this.labelStretchMode.Size = new System.Drawing.Size(126, 30);
             this.labelStretchMode.TabIndex = 233;
@@ -114,7 +114,7 @@
             this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.label1.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(43, 310);
+            this.label1.Location = new System.Drawing.Point(43, 299);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(163, 30);
             this.label1.TabIndex = 234;
@@ -126,7 +126,7 @@
             this.label2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.label2.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(239, 310);
+            this.label2.Location = new System.Drawing.Point(247, 299);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(176, 30);
             this.label2.TabIndex = 235;
@@ -138,7 +138,7 @@
             this.pictureBoxRepeatSmallest.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBoxRepeatSmallest.Image = global::Rainbow.Properties.Resources.repeatsmallest;
             this.pictureBoxRepeatSmallest.InitialImage = null;
-            this.pictureBoxRepeatSmallest.Location = new System.Drawing.Point(268, 27);
+            this.pictureBoxRepeatSmallest.Location = new System.Drawing.Point(276, 27);
             this.pictureBoxRepeatSmallest.Name = "pictureBoxRepeatSmallest";
             this.pictureBoxRepeatSmallest.Size = new System.Drawing.Size(130, 102);
             this.pictureBoxRepeatSmallest.TabIndex = 236;
@@ -151,7 +151,7 @@
             this.labelRepeatSmallest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.labelRepeatSmallest.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelRepeatSmallest.ForeColor = System.Drawing.Color.White;
-            this.labelRepeatSmallest.Location = new System.Drawing.Point(253, 132);
+            this.labelRepeatSmallest.Location = new System.Drawing.Point(261, 132);
             this.labelRepeatSmallest.Name = "labelRepeatSmallest";
             this.labelRepeatSmallest.Size = new System.Drawing.Size(158, 30);
             this.labelRepeatSmallest.TabIndex = 237;
@@ -161,7 +161,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(459, 415);
+            this.ClientSize = new System.Drawing.Size(475, 415);
             this.Controls.Add(this.labelRepeatSmallest);
             this.Controls.Add(this.pictureBoxRepeatSmallest);
             this.Controls.Add(this.label2);

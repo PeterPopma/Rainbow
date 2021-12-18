@@ -102,7 +102,7 @@ namespace Rainbow.UI
                         button.Text = presetItem.Name;
                         button.Width = 120;
                         button.ForeColor = Color.White;
-                        button.Font = new Font("Serif", 8.25f, FontStyle.Bold);
+                        button.Font = new Font("Serif", 8.25f, FontStyle.Regular);
                         button.FlatStyle = FlatStyle.Standard;
                         button.Click += new EventHandler(presetbutton_Click);
                         Controls.Add(button);

@@ -1,10 +1,12 @@
-﻿using Microsoft.Win32;
+﻿using Jacobi.Vst.Core;
+using Microsoft.Win32;
 using Rainbow.Synth;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Media;
 using System.Windows.Forms;
 
 namespace Rainbow.UI
@@ -98,19 +100,27 @@ namespace Rainbow.UI
 
         public void setWaveFile1(string name, string category)
         {
-            CategoryItem item = WaveFiles.Find(x => x.Equals(new CategoryItem(name, category)));
+            CategoryItem item = WaveFiles.Find(x => x.Name.Equals(name) && x.Category.Equals(category));
             if (item!=null)
             {
                 CurrentWaveFile1 = item;
+            }
+            else
+            {
+                int error = 1;
             }
         }
 
         public void setWaveFile2(string name, string category)
         {
-            CategoryItem item = WaveFiles.Find(x => x.Equals(new CategoryItem(name, category)));
+            CategoryItem item = WaveFiles.Find(x => x.Name.Equals(name) && x.Category.Equals(category));
             if (item != null)
             {
                 CurrentWaveFile2 = item;
+            }
+            else
+            {
+                int error = 1;
             }
         }
 
@@ -855,6 +865,18 @@ namespace Rainbow.UI
         private void checkBoxInvert2_MouseUp(object sender, MouseEventArgs e)
         {
             synthGenerator.UpdateEffects();
+        }
+
+        private void buttonPlay1_Click(object sender, EventArgs e)
+        {
+            SoundPlayer wavFile = new SoundPlayer(DataFolder + "\\wavefiles\\" + currentWaveFile1.Category + "\\" + currentWaveFile1.Name + ".wav");
+            wavFile.Play();
+        }
+
+        private void buttonPlay2_Click(object sender, EventArgs e)
+        {
+            SoundPlayer wavFile = new SoundPlayer(DataFolder + "\\wavefiles\\" + currentWaveFile2.Category + "\\" + currentWaveFile2.Name + ".wav");
+            wavFile.Play();
         }
     }
 }

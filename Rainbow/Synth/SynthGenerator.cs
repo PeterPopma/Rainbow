@@ -125,6 +125,7 @@ namespace Rainbow.Synth
                 if (sourceData1.Length>sourceData2.Length)
                 {
                     float[] newBuffer = new float[sourceData1.Length];
+                    // Fill sourceData2 with leading zeroes
                     for (int k=0; k<newBuffer.Length; k++)
                     {
                         if (k < sourceData1.Length - sourceData2.Length)
@@ -141,6 +142,7 @@ namespace Rainbow.Synth
                 else
                 {
                     float[] newBuffer = new float[sourceData2.Length];
+                    // Fill sourceData1 with trailing zeroes
                     for (int k = 0; k < newBuffer.Length; k++)
                     {
                         if (k < sourceData1.Length)
@@ -219,7 +221,7 @@ namespace Rainbow.Synth
                         float shrinkFactor = sourceData2.Length / (float)sourceData1.Length;
                         newBuffer[k] = sourceData2[(int)(k * shrinkFactor)];
                     }
-                    sourceData1 = newBuffer;
+                    sourceData2 = newBuffer;
                 }
             }
         }
@@ -228,7 +230,7 @@ namespace Rainbow.Synth
         {
             if (MixMode == 0)   // Fade in - Fade out
             {
-                return soundData1 * percentageComplete + soundData2 * (1-percentageComplete);
+                return soundData1 * (1 - percentageComplete) + soundData2 * percentageComplete;
             } else if(MixMode == 1)   // Both same weight
             {
                 return soundData1 + soundData2;
@@ -240,11 +242,11 @@ namespace Rainbow.Synth
             else if(MixMode == 3)   // Alternate Square
             {
                 float value = 0;
-                if (percentageComplete % (1/(float)numMixWaves) <= 1 / (float)numMixWaves*2)
+                if (percentageComplete % (1/(float)numMixWaves) <= 1 / ((float)numMixWaves*2))
                 {
                     value += soundData1;
                 }
-                if (percentageComplete % (1 / (float)numMixWaves) > 1 / (float)numMixWaves * 2)
+                else
                 {
                     value += soundData2;
                 }
@@ -253,7 +255,7 @@ namespace Rainbow.Synth
             else if(MixMode == 4)   // Alternate Triangle
             {
                 float value = 0;
-                float currentPhase = (percentageComplete % (1 / (float)numMixWaves)) / (1 / (float)numMixWaves);
+                float currentPhase = percentageComplete % (1 / (float)numMixWaves) * numMixWaves;
                 value += (1-currentPhase) * soundData1;
                 value += currentPhase * soundData2;
                 return value;
@@ -261,9 +263,9 @@ namespace Rainbow.Synth
             else   // Alternate Sine
             {
                 double value = 0;
-                float currentPhase = (percentageComplete % (1 / (float)numMixWaves)) / (1 / (float)numMixWaves);
-                value += Math.Sin((currentPhase+0.5) * Math.PI * 2) * soundData1;
-                value += Math.Sin(currentPhase * Math.PI * 2) * soundData2;
+                float currentPhase = percentageComplete % (1 / (float)numMixWaves) * numMixWaves;
+                value += Math.Cos(currentPhase * Math.PI) * soundData1;
+                value += Math.Sin(currentPhase * Math.PI) * soundData2;
                 return (float)value;
             }
 

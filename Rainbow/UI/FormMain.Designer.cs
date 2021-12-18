@@ -48,6 +48,7 @@ namespace Rainbow.UI
             this.pictureBoxMixMode = new System.Windows.Forms.PictureBox();
             this.labelMixMode = new System.Windows.Forms.Label();
             this.panelSound2 = new System.Windows.Forms.Panel();
+            this.buttonPlay2 = new System.Windows.Forms.Button();
             this.gradientButtonNextSound2 = new Rainbow.CustomControls.GradientButton();
             this.gradientButtonPreviousSound2 = new Rainbow.CustomControls.GradientButton();
             this.checkBoxInvert2 = new System.Windows.Forms.CheckBox();
@@ -67,6 +68,7 @@ namespace Rainbow.UI
             this.checkBoxInvert1 = new System.Windows.Forms.CheckBox();
             this.pictureBoxVolume1 = new System.Windows.Forms.PictureBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.buttonPlay1 = new System.Windows.Forms.Button();
             this.panelPreset = new System.Windows.Forms.Panel();
             this.gradientButtonAddPreset = new Rainbow.CustomControls.GradientButton();
             this.gradientButtonPresetSave = new Rainbow.CustomControls.GradientButton();
@@ -176,11 +178,11 @@ namespace Rainbow.UI
             this.labelWaveFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.labelWaveFile.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelWaveFile.ForeColor = System.Drawing.Color.White;
-            this.labelWaveFile.Location = new System.Drawing.Point(72, 41);
+            this.labelWaveFile.Location = new System.Drawing.Point(82, 44);
             this.labelWaveFile.Name = "labelWaveFile";
-            this.labelWaveFile.Size = new System.Drawing.Size(121, 30);
+            this.labelWaveFile.Size = new System.Drawing.Size(89, 30);
             this.labelWaveFile.TabIndex = 23;
-            this.labelWaveFile.Text = "Base Sound";
+            this.labelWaveFile.Text = "Sound 1";
             this.labelWaveFile.Click += new System.EventHandler(this.labelWaveFile_Click);
             this.labelWaveFile.MouseMove += new System.Windows.Forms.MouseEventHandler(this.labelWaveFile_MouseMove);
             // 
@@ -308,6 +310,7 @@ namespace Rainbow.UI
             // 
             this.panelSound2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.panelSound2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelSound2.Controls.Add(this.buttonPlay2);
             this.panelSound2.Controls.Add(this.gradientButtonNextSound2);
             this.panelSound2.Controls.Add(this.gradientButtonPreviousSound2);
             this.panelSound2.Controls.Add(this.checkBoxInvert2);
@@ -320,6 +323,20 @@ namespace Rainbow.UI
             this.panelSound2.TabIndex = 46;
             this.panelSound2.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSecondarySound_Paint);
             this.panelSound2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelSecondarySound_MouseClick);
+            // 
+            // buttonPlay2
+            // 
+            this.buttonPlay2.BackColor = System.Drawing.Color.Transparent;
+            this.buttonPlay2.FlatAppearance.BorderSize = 0;
+            this.buttonPlay2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonPlay2.ForeColor = System.Drawing.Color.IndianRed;
+            this.buttonPlay2.Image = global::Rainbow.Properties.Resources.play;
+            this.buttonPlay2.Location = new System.Drawing.Point(4, 4);
+            this.buttonPlay2.Name = "buttonPlay2";
+            this.buttonPlay2.Size = new System.Drawing.Size(22, 23);
+            this.buttonPlay2.TabIndex = 55;
+            this.buttonPlay2.UseVisualStyleBackColor = true;
+            this.buttonPlay2.Click += new System.EventHandler(this.buttonPlay2_Click);
             // 
             // gradientButtonNextSound2
             // 
@@ -353,7 +370,7 @@ namespace Rainbow.UI
             // 
             this.checkBoxInvert2.AutoSize = true;
             this.checkBoxInvert2.ForeColor = System.Drawing.Color.Silver;
-            this.checkBoxInvert2.Location = new System.Drawing.Point(13, 9);
+            this.checkBoxInvert2.Location = new System.Drawing.Point(32, 7);
             this.checkBoxInvert2.Name = "checkBoxInvert2";
             this.checkBoxInvert2.Size = new System.Drawing.Size(56, 19);
             this.checkBoxInvert2.TabIndex = 50;
@@ -393,11 +410,11 @@ namespace Rainbow.UI
             this.labelSecondary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.labelSecondary.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelSecondary.ForeColor = System.Drawing.Color.White;
-            this.labelSecondary.Location = new System.Drawing.Point(71, 42);
+            this.labelSecondary.Location = new System.Drawing.Point(83, 45);
             this.labelSecondary.Name = "labelSecondary";
-            this.labelSecondary.Size = new System.Drawing.Size(76, 30);
+            this.labelSecondary.Size = new System.Drawing.Size(89, 30);
             this.labelSecondary.TabIndex = 23;
-            this.labelSecondary.Text = "[None]";
+            this.labelSecondary.Text = "Sound 2";
             this.labelSecondary.Click += new System.EventHandler(this.labelSecondary_Click);
             this.labelSecondary.MouseMove += new System.Windows.Forms.MouseEventHandler(this.labelSecondary_MouseMove);
             // 
@@ -502,6 +519,7 @@ namespace Rainbow.UI
             this.panelSound1.Controls.Add(this.pictureBoxVolume1);
             this.panelSound1.Controls.Add(this.label7);
             this.panelSound1.Controls.Add(this.labelWaveFile);
+            this.panelSound1.Controls.Add(this.buttonPlay1);
             this.panelSound1.Location = new System.Drawing.Point(12, 99);
             this.panelSound1.Name = "panelSound1";
             this.panelSound1.Size = new System.Drawing.Size(441, 94);
@@ -541,7 +559,7 @@ namespace Rainbow.UI
             // 
             this.checkBoxInvert1.AutoSize = true;
             this.checkBoxInvert1.ForeColor = System.Drawing.Color.Silver;
-            this.checkBoxInvert1.Location = new System.Drawing.Point(13, 9);
+            this.checkBoxInvert1.Location = new System.Drawing.Point(33, 9);
             this.checkBoxInvert1.Name = "checkBoxInvert1";
             this.checkBoxInvert1.Size = new System.Drawing.Size(56, 19);
             this.checkBoxInvert1.TabIndex = 51;
@@ -574,6 +592,20 @@ namespace Rainbow.UI
             this.label7.Size = new System.Drawing.Size(63, 21);
             this.label7.TabIndex = 49;
             this.label7.Text = "Volume";
+            // 
+            // buttonPlay1
+            // 
+            this.buttonPlay1.BackColor = System.Drawing.Color.Transparent;
+            this.buttonPlay1.FlatAppearance.BorderSize = 0;
+            this.buttonPlay1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonPlay1.ForeColor = System.Drawing.Color.IndianRed;
+            this.buttonPlay1.Image = global::Rainbow.Properties.Resources.play;
+            this.buttonPlay1.Location = new System.Drawing.Point(4, 7);
+            this.buttonPlay1.Name = "buttonPlay1";
+            this.buttonPlay1.Size = new System.Drawing.Size(24, 21);
+            this.buttonPlay1.TabIndex = 54;
+            this.buttonPlay1.UseVisualStyleBackColor = true;
+            this.buttonPlay1.Click += new System.EventHandler(this.buttonPlay1_Click);
             // 
             // panelPreset
             // 
@@ -905,5 +937,7 @@ namespace Rainbow.UI
         private CustomControls.GradientButton gradientButtonPreviousSound1;
         private CustomControls.GradientButton gradientButtonNextSound2;
         private CustomControls.GradientButton gradientButtonPreviousSound2;
+        private System.Windows.Forms.Button buttonPlay1;
+        private System.Windows.Forms.Button buttonPlay2;
     }
 }

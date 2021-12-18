@@ -6,11 +6,6 @@
       "DisplayName": "Rainbow",
       "ColorIndex": 0
     },
-    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
-      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
-      "DisplayName": "Miscellaneous Files",
-      "ColorIndex": -1
-    },
     "8747fbcb-45bb-4295-b446-bea11631db4b": {
       "ProjectGuid": "8747fbcb-45bb-4295-b446-bea11631db4b",
       "DisplayName": "Jacobi.Vst.Samples.Host",
