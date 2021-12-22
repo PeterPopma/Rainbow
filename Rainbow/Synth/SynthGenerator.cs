@@ -287,6 +287,11 @@ namespace Rainbow.Synth
 
             ApplyStretch(ref tempData1, ref tempData2);
 
+            if(soundBufferSize==0)
+            {
+                return null;
+            }
+
             float[] mixedData = new float[soundBufferSize];
             for (long k=0; k<soundBufferSize; k++)
             {

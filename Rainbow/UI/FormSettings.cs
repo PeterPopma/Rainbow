@@ -41,8 +41,8 @@ namespace Rainbow.UI
             if (!labelDataFolder.Text.Equals(myParent.DataFolder))     // folder changed
             {
                 myParent.DataFolder = labelDataFolder.Text;
-                myParent.ReloadPresets();
                 myParent.UpdateWavefilesList();
+                myParent.ReloadPresets();
                 myParent.SaveSettings();
             }
             Close();

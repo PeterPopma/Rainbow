@@ -69,11 +69,12 @@
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.gradientButtonChangeDataFolder);
             this.panel2.Controls.Add(this.labelDataFolder);
             this.panel2.Controls.Add(this.label2);
-            this.panel2.Location = new System.Drawing.Point(99, 44);
+            this.panel2.Location = new System.Drawing.Point(33, 57);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(371, 77);
+            this.panel2.Size = new System.Drawing.Size(514, 77);
             this.panel2.TabIndex = 41;
             // 
             // labelDataFolder
@@ -82,7 +83,7 @@
             this.labelDataFolder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.labelDataFolder.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.labelDataFolder.ForeColor = System.Drawing.Color.White;
-            this.labelDataFolder.Location = new System.Drawing.Point(96, 11);
+            this.labelDataFolder.Location = new System.Drawing.Point(92, 13);
             this.labelDataFolder.Name = "labelDataFolder";
             this.labelDataFolder.Size = new System.Drawing.Size(81, 15);
             this.labelDataFolder.TabIndex = 6;
@@ -106,7 +107,7 @@
             this.gradientButtonChangeDataFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.gradientButtonChangeDataFolder.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.gradientButtonChangeDataFolder.HorizontalGradient = false;
-            this.gradientButtonChangeDataFolder.Location = new System.Drawing.Point(120, 87);
+            this.gradientButtonChangeDataFolder.Location = new System.Drawing.Point(86, 43);
             this.gradientButtonChangeDataFolder.Name = "gradientButtonChangeDataFolder";
             this.gradientButtonChangeDataFolder.Size = new System.Drawing.Size(56, 18);
             this.gradientButtonChangeDataFolder.TabIndex = 36;
@@ -119,7 +120,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(591, 273);
-            this.Controls.Add(this.gradientButtonChangeDataFolder);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.gradientButtonCancel);
             this.Controls.Add(this.gradientButtonOk);
