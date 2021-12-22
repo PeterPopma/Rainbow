@@ -177,7 +177,85 @@
 							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\percussion\wooden rods.wav" Vital="no" KeyPath="no" />
 							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\percussion\xylophone.wav" Vital="no" KeyPath="no" />
 						</Component>
-					</Directory>					
+					</Directory>
+					<Directory Id="PianoDirID" Name="Piano">
+						<Component Id="Piano" Guid="cf857db4-7844-4a40-82ff-1d1332399b84">
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\piano\grand piano.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\piano\organ.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\piano\organ 2.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\piano\organ 3.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\piano\piano.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\piano\piano 2.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\piano\piano 3.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\piano\piano chord.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\piano\piano chord 2.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\piano\piano scrape.wav" Vital="no" KeyPath="no" />
+						</Component>
+					</Directory>
+					<Directory Id="SynthDirID" Name="Synth">
+						<Component Id="Synth" Guid="cf857db4-7844-4a40-82ff-1d1332399b85">
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\pad.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\poing.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\poing 2.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\poing 3.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\poing 4.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\poing 5.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\poing 6.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\poing 7.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\poing 8.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\poing 9.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\poing 10.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\sawtooth.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\scratchy synth.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\shimmer synth.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\sine.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\square.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\synth organ.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\synth piano.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\synth\synth.wav" Vital="no" KeyPath="no" />
+						</Component>
+					</Directory>
+					<Directory Id="ViolinDirID" Name="Violin">
+						<Component Id="Violin" Guid="cf857db4-7844-4a40-82ff-1d1332399b86">
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\violin\violin.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\violin\violin 2.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\violin\violin 3.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\violin\violin 4.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\violin\violin 5.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\violin\cello.wav" Vital="no" KeyPath="no" />
+						</Component>
+					</Directory>
+					<Directory Id="VocalDirID" Name="Vocal">
+						<Component Id="Vocal" Guid="cf857db4-7844-4a40-82ff-1d1332399b87">
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\vocal\artificial choir.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\vocal\choir sting.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\vocal\female choir.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\vocal\male choir.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\vocal\redemption choir.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\vocal\shaman choir.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\vocal\stereo vocals.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\vocal\vocals.wav" Vital="no" KeyPath="no" />						</Component>
+					</Directory>
+					<Directory Id="WoodwindDirID" Name="Woodwind">
+						<Component Id="Woodwind" Guid="cf857db4-7844-4a40-82ff-1d1332399b88">
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\clarinet.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\fagot.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\flute.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\flute 2.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\flute 3.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\oboe.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\oboe 2.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\oboe 3.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\panflute.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\panflute 2.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\panflute 3.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\panflute 4.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\panflute 5.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\panflute 6.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\whistle.wav" Vital="no" KeyPath="no" />
+							<File Source="$(var.Rainbow.TargetDir)..\..\..\..\wavefiles\woodwind\whistle 2.wav" Vital="no" KeyPath="no" />
+						</Component>
+					</Directory>				
 				</Directory>
                 </Directory>
             </Directory>
@@ -208,7 +286,12 @@
 		<ComponentRef Id="Lead" />
 		<ComponentRef Id="Natural" />
 		<ComponentRef Id="Percussion" />
-		<!--ComponentRef Id="PresetsDir" /-->
+		<ComponentRef Id="Piano" />
+		<ComponentRef Id="Synth" />
+	  	<ComponentRef Id="Violin" />
+	  	<ComponentRef Id="Vocal" />
+	  	<ComponentRef Id="Woodwind" />
+	<!--ComponentRef Id="PresetsDir" /-->
     </Feature>
 
     <!-- Step 2: Add UI to your installer / Step 4: Trigger the custom action -->
