@@ -43,8 +43,11 @@ namespace Rainbow.UI
                 myParent.DataFolder = labelDataFolder.Text;
                 myParent.UpdateWavefilesList();
                 myParent.ReloadPresets();
-                myParent.SaveSettings();
             }
+            myParent.SynthGenerator.SamplesPerSecondOutput = Convert.ToInt32(comboBoxSamplesPerSecond.Text);
+            myParent.SynthGenerator.BitsPerSample = Convert.ToInt32(comboBoxBitsPerSample.Text);
+            myParent.SaveSettings();
+
             Close();
         }
 
@@ -56,6 +59,8 @@ namespace Rainbow.UI
         private void FormAddPreset_Load(object sender, EventArgs e)
         {
             labelDataFolder.Text = myParent.DataFolder;
+            comboBoxSamplesPerSecond.SelectedIndex = comboBoxSamplesPerSecond.FindStringExact(myParent.SynthGenerator.SamplesPerSecondOutput.ToString());
+            comboBoxBitsPerSample.SelectedIndex = comboBoxBitsPerSample.FindStringExact(myParent.SynthGenerator.BitsPerSample.ToString());
         }
 
         private void gradientButtonChangeDataFolder_Click(object sender, EventArgs e)

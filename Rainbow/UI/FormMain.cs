@@ -445,10 +445,14 @@ namespace Rainbow.UI
             if (key != null)
             {
                 DataFolder = (key.GetValue("DataFolder") == null ? Directory.GetCurrentDirectory() : key.GetValue("DataFolder").ToString());
+                synthGenerator.SamplesPerSecondOutput = key.GetValue("SamplesPerSecond") == null ? 44100 : Convert.ToInt32(key.GetValue("SamplesPerSecond"));
+                synthGenerator.BitsPerSample = key.GetValue("BitsPerSample") == null ? 32 : Convert.ToInt32(key.GetValue("BitsPerSample"));
             }
             else
             {
                 DataFolder = Directory.GetCurrentDirectory();
+                synthGenerator.SamplesPerSecondOutput = 44100;
+                synthGenerator.BitsPerSample = 32;
             }
         }
 
@@ -458,6 +462,8 @@ namespace Rainbow.UI
             RegistryKey key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Peter Popma\\Rainbow");
 
             key.SetValue("DataFolder", DataFolder);
+            key.SetValue("SamplesPerSecond", synthGenerator.SamplesPerSecondOutput);
+            key.SetValue("BitsPerSample", synthGenerator.BitsPerSample);
         }
 
         private void labelPreset_MouseMove(object sender, MouseEventArgs e)
@@ -846,7 +852,7 @@ namespace Rainbow.UI
 
         private void pictureBoxDuration_MouseMove(object sender, MouseEventArgs e)
         {
-            pictureBoxRepeat.Cursor = Cursors.VSplit;
+            pictureBoxDuration.Cursor = Cursors.VSplit;
             UpdateDurationValue(e.X);
         }
 
@@ -869,14 +875,34 @@ namespace Rainbow.UI
 
         private void buttonPlay1_Click(object sender, EventArgs e)
         {
-            SoundPlayer wavFile = new SoundPlayer(DataFolder + "\\wavefiles\\" + currentWaveFile1.Category + "\\" + currentWaveFile1.Name + ".wav");
+           
+            SoundPlayer wavFile = new SoundPlayer(GetWaveFileName(currentWaveFile1));
             wavFile.Play();
         }
 
         private void buttonPlay2_Click(object sender, EventArgs e)
         {
-            SoundPlayer wavFile = new SoundPlayer(DataFolder + "\\wavefiles\\" + currentWaveFile2.Category + "\\" + currentWaveFile2.Name + ".wav");
+            SoundPlayer wavFile = new SoundPlayer(GetWaveFileName(currentWaveFile2));
             wavFile.Play();
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.SaveFileDialog saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            saveFileDialog1.Filter = "Wave file|*.wav";
+            saveFileDialog1.Title = "Save to .wav file";
+            saveFileDialog1.ShowDialog();
+
+            // If the file name is not an empty string open it for saving.
+            if (saveFileDialog1.FileName != "")
+            {
+                synthGenerator.Save(saveFileDialog1.FileName);
+            }
+        }
+
+        private void buttonPlay_Click(object sender, EventArgs e)
+        {
+            synthGenerator.Play();
         }
     }
 }

@@ -3,13 +3,16 @@ using Rainbow.UI;
 using Rainbow.Wave;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Media;
 
 namespace Rainbow.Synth
 {
     class SynthGenerator
     {
         WaveInfo waveInfo = new WaveInfo();
-        private int samplesPerSecond = 44100;
+        private int samplesPerSecondInternal = 44100;
+        private int samplesPerSecondOutput = 44100;
         private int bitsPerSample = 32;
         private double repeatBegin = 0.05;
         private double repeatEnd = 0.4;
@@ -35,6 +38,8 @@ namespace Rainbow.Synth
         public double Duration { get => duration; set => duration = value; }
         public double MaxDuration { get => maxDuration; set => maxDuration = value; }
         public int NumMixWaves { get => numMixWaves; set => numMixWaves = value; }
+        public int BitsPerSample { get => bitsPerSample; set => bitsPerSample = value; }
+        public int SamplesPerSecondOutput { get => samplesPerSecondOutput; set => samplesPerSecondOutput = value; }
 
         public SynthGenerator()
         {
@@ -72,7 +77,7 @@ namespace Rainbow.Synth
 
         public void LoadWaveFile(string wavefileName, int soundNumber)
         {
-            WaveFile.LoadFromDisk(wavefileName, waveInfo, samplesPerSecond, soundNumber);
+            WaveFile.LoadFromDisk(wavefileName, waveInfo, samplesPerSecondInternal, soundNumber);
         }
 
         // call when Preset settings changed (but when .wav files change, call LoadWaveFile first)
@@ -111,7 +116,7 @@ namespace Rainbow.Synth
             {
                 soundBufferSize = Math.Min(WaveInfo.WaveFileData1Left.Length, WaveInfo.WaveFileData2Left.Length);
             }
-            float seconds = soundBufferSize / (float)samplesPerSecond;
+            float seconds = soundBufferSize / (float)samplesPerSecondInternal;
             duration = seconds;
             maxDuration = duration * 3;
             UpdateEffects();
@@ -310,7 +315,7 @@ namespace Rainbow.Synth
 
         private float[] ApplyDuration(float[] sourceData)
         {
-            float[] destData = new float[(int)(duration * samplesPerSecond)];
+            float[] destData = new float[(int)(duration * samplesPerSecondInternal)];
             for (long k=0; k<destData.Length; k++)
             {
                 float percentageComplete = k / (float)destData.Length;
@@ -411,6 +416,87 @@ namespace Rainbow.Synth
                     vstAudioBuffers[0][k] = 0;
                     vstAudioBuffers[1][k] = 0;
                 }
+            }
+        }
+
+        private void WriteWaveData(BinaryWriter writer, WaveDataChunk data)
+        {
+            // Write the header
+            writer.Write("RIFF".ToCharArray());
+            writer.Write(36 + data.dwChunkSize);
+            writer.Write("WAVE".ToCharArray());
+
+            // Write the format chunk
+            writer.Write("fmt ".ToCharArray());     // chunk id
+            writer.Write((uint)16);                       // chunk size
+            writer.Write((ushort)1);                        // format tag (PCM=1)
+            writer.Write((ushort)2);                        // channels
+            writer.Write((uint)SamplesPerSecondOutput);         // samplerate
+            writer.Write((uint)(SamplesPerSecondOutput * 2 * BitsPerSample / 8));        // byte rate
+            writer.Write((ushort)(2 * BitsPerSample / 8));        // block align (samplesPerSecond * wChannels * (wBitsPerSample / 8)
+            writer.Write((ushort)BitsPerSample);            // bits per sample
+
+            // Write the data chunk
+            writer.Write(data.sChunkID.ToCharArray());
+            writer.Write(data.dwChunkSize);
+
+            foreach (int dataPoint in data.audioData)
+            {
+                if (BitsPerSample == 32)
+                {
+                    writer.Write(dataPoint);
+                }
+                else
+                {
+                    writer.Write((short)dataPoint);
+                }
+            }
+        }
+
+        // Converts the WaveData -1..1 floats to values of 
+        private WaveDataChunk ConvertToFileData()
+        {
+            WaveDataChunk waveDataChunk = new WaveDataChunk();
+            waveDataChunk.audioData = new int[WaveInfo.WaveDataLeft.Length*2];
+            waveDataChunk.dwChunkSize = (uint)(waveDataChunk.audioData.Length * (bitsPerSample / 8));
+
+            for (int sampleNumber=0; sampleNumber<WaveInfo.WaveDataLeft.Length; sampleNumber++)
+            {
+                waveDataChunk.audioData[sampleNumber * 2] = (int)(WaveInfo.WaveDataLeft[sampleNumber] * 32768);
+                waveDataChunk.audioData[sampleNumber * 2 + 1] = (int)(WaveInfo.WaveDataRight[sampleNumber] * 32768);
+
+                if (BitsPerSample == 32)
+                {
+                    waveDataChunk.audioData[sampleNumber * 2] *= 65536;
+                    waveDataChunk.audioData[sampleNumber * 2 + 1] *= 65536;
+                }
+            }
+
+            return waveDataChunk;
+        }
+
+        public void Save(string filePath)
+        {
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+            using (BinaryWriter writer = new BinaryWriter(fileStream))
+            {
+                WriteWaveData(writer, ConvertToFileData());
+
+                writer.Seek(4, SeekOrigin.Begin);
+                uint filesize = (uint)writer.BaseStream.Length;
+                writer.Write(filesize - 8);
+            }
+        }
+
+        public void Play()
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            using (BinaryWriter writer = new BinaryWriter(memoryStream))
+            {
+                WriteWaveData(writer, ConvertToFileData());
+
+                memoryStream.Position = 0;
+                new SoundPlayer(memoryStream).Play();
             }
         }
     }

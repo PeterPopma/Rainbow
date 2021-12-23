@@ -39,7 +39,7 @@
             this.gradientButtonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.gradientButtonCancel.ForeColor = System.Drawing.Color.Black;
             this.gradientButtonCancel.HorizontalGradient = false;
-            this.gradientButtonCancel.Location = new System.Drawing.Point(461, 627);
+            this.gradientButtonCancel.Location = new System.Drawing.Point(880, 611);
             this.gradientButtonCancel.Name = "gradientButtonCancel";
             this.gradientButtonCancel.Size = new System.Drawing.Size(121, 23);
             this.gradientButtonCancel.TabIndex = 0;

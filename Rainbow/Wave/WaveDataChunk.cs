@@ -10,7 +10,7 @@ namespace Rainbow.Wave
     {
         public string sChunkID;     // "data"
         public uint dwChunkSize;    // Length of header in bytes
-        public int[] audioData;  // 16-bit/32-bit audio data
+        public int[] audioData;     // 16-bit/32-bit audio data
 
         /// <summary>
         /// Initializes a new data chunk with default values.

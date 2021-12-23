@@ -42,6 +42,8 @@ namespace Rainbow.UI
             this.label9 = new System.Windows.Forms.Label();
             this.pictureBoxTitle = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.buttonSave = new System.Windows.Forms.Button();
+            this.buttonPlay = new System.Windows.Forms.Button();
             this.panelMixMode = new System.Windows.Forms.Panel();
             this.gradientButtonNextMixMode = new Rainbow.CustomControls.GradientButton();
             this.gradientButtonPreviousMixMode = new Rainbow.CustomControls.GradientButton();
@@ -106,7 +108,7 @@ namespace Rainbow.UI
             // 
             // pictureBoxRepeat
             // 
-            this.pictureBoxRepeat.Location = new System.Drawing.Point(32, 28);
+            this.pictureBoxRepeat.Location = new System.Drawing.Point(8, 28);
             this.pictureBoxRepeat.Name = "pictureBoxRepeat";
             this.pictureBoxRepeat.Size = new System.Drawing.Size(208, 31);
             this.pictureBoxRepeat.TabIndex = 11;
@@ -133,7 +135,7 @@ namespace Rainbow.UI
             this.labelRepeatBegin.AutoSize = true;
             this.labelRepeatBegin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.labelRepeatBegin.ForeColor = System.Drawing.Color.White;
-            this.labelRepeatBegin.Location = new System.Drawing.Point(279, 25);
+            this.labelRepeatBegin.Location = new System.Drawing.Point(255, 25);
             this.labelRepeatBegin.Name = "labelRepeatBegin";
             this.labelRepeatBegin.Size = new System.Drawing.Size(32, 15);
             this.labelRepeatBegin.TabIndex = 13;
@@ -144,7 +146,7 @@ namespace Rainbow.UI
             this.labelRepeatEnd.AutoSize = true;
             this.labelRepeatEnd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.labelRepeatEnd.ForeColor = System.Drawing.Color.White;
-            this.labelRepeatEnd.Location = new System.Drawing.Point(279, 44);
+            this.labelRepeatEnd.Location = new System.Drawing.Point(255, 44);
             this.labelRepeatEnd.Name = "labelRepeatEnd";
             this.labelRepeatEnd.Size = new System.Drawing.Size(41, 15);
             this.labelRepeatEnd.TabIndex = 15;
@@ -155,7 +157,7 @@ namespace Rainbow.UI
             this.label5.AutoSize = true;
             this.label5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.label5.ForeColor = System.Drawing.Color.Silver;
-            this.label5.Location = new System.Drawing.Point(246, 24);
+            this.label5.Location = new System.Drawing.Point(222, 24);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(33, 15);
             this.label5.TabIndex = 18;
@@ -166,7 +168,7 @@ namespace Rainbow.UI
             this.label6.AutoSize = true;
             this.label6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.label6.ForeColor = System.Drawing.Color.Silver;
-            this.label6.Location = new System.Drawing.Point(246, 44);
+            this.label6.Location = new System.Drawing.Point(222, 44);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(30, 15);
             this.label6.TabIndex = 19;
@@ -192,7 +194,7 @@ namespace Rainbow.UI
             this.labelPreset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.labelPreset.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelPreset.ForeColor = System.Drawing.Color.White;
-            this.labelPreset.Location = new System.Drawing.Point(308, 13);
+            this.labelPreset.Location = new System.Drawing.Point(296, 13);
             this.labelPreset.Name = "labelPreset";
             this.labelPreset.Size = new System.Drawing.Size(70, 30);
             this.labelPreset.TabIndex = 27;
@@ -224,6 +226,8 @@ namespace Rainbow.UI
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.buttonSave);
+            this.panel1.Controls.Add(this.buttonPlay);
             this.panel1.Controls.Add(this.panelMixMode);
             this.panel1.Controls.Add(this.panelSound2);
             this.panel1.Controls.Add(this.panelRepeatPart);
@@ -242,6 +246,34 @@ namespace Rainbow.UI
             this.panel1.Size = new System.Drawing.Size(910, 386);
             this.panel1.TabIndex = 40;
             // 
+            // buttonSave
+            // 
+            this.buttonSave.BackColor = System.Drawing.Color.Transparent;
+            this.buttonSave.FlatAppearance.BorderSize = 0;
+            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSave.ForeColor = System.Drawing.Color.IndianRed;
+            this.buttonSave.Image = global::Rainbow.Properties.Resources.buttonsave;
+            this.buttonSave.Location = new System.Drawing.Point(772, 8);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(51, 49);
+            this.buttonSave.TabIndex = 55;
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+            // 
+            // buttonPlay
+            // 
+            this.buttonPlay.BackColor = System.Drawing.Color.Transparent;
+            this.buttonPlay.FlatAppearance.BorderSize = 0;
+            this.buttonPlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonPlay.ForeColor = System.Drawing.Color.IndianRed;
+            this.buttonPlay.Image = global::Rainbow.Properties.Resources.playbutton;
+            this.buttonPlay.Location = new System.Drawing.Point(820, 269);
+            this.buttonPlay.Name = "buttonPlay";
+            this.buttonPlay.Size = new System.Drawing.Size(54, 54);
+            this.buttonPlay.TabIndex = 54;
+            this.buttonPlay.UseVisualStyleBackColor = true;
+            this.buttonPlay.Click += new System.EventHandler(this.buttonPlay_Click);
+            // 
             // panelMixMode
             // 
             this.panelMixMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -250,9 +282,9 @@ namespace Rainbow.UI
             this.panelMixMode.Controls.Add(this.gradientButtonPreviousMixMode);
             this.panelMixMode.Controls.Add(this.pictureBoxMixMode);
             this.panelMixMode.Controls.Add(this.labelMixMode);
-            this.panelMixMode.Location = new System.Drawing.Point(291, 221);
+            this.panelMixMode.Location = new System.Drawing.Point(242, 221);
             this.panelMixMode.Name = "panelMixMode";
-            this.panelMixMode.Size = new System.Drawing.Size(271, 154);
+            this.panelMixMode.Size = new System.Drawing.Size(226, 154);
             this.panelMixMode.TabIndex = 52;
             // 
             // gradientButtonNextMixMode
@@ -261,7 +293,7 @@ namespace Rainbow.UI
             this.gradientButtonNextMixMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.gradientButtonNextMixMode.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.gradientButtonNextMixMode.HorizontalGradient = false;
-            this.gradientButtonNextMixMode.Location = new System.Drawing.Point(53, 46);
+            this.gradientButtonNextMixMode.Location = new System.Drawing.Point(41, 46);
             this.gradientButtonNextMixMode.Name = "gradientButtonNextMixMode";
             this.gradientButtonNextMixMode.Size = new System.Drawing.Size(23, 41);
             this.gradientButtonNextMixMode.TabIndex = 56;
@@ -275,7 +307,7 @@ namespace Rainbow.UI
             this.gradientButtonPreviousMixMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.gradientButtonPreviousMixMode.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.gradientButtonPreviousMixMode.HorizontalGradient = false;
-            this.gradientButtonPreviousMixMode.Location = new System.Drawing.Point(24, 46);
+            this.gradientButtonPreviousMixMode.Location = new System.Drawing.Point(12, 46);
             this.gradientButtonPreviousMixMode.Name = "gradientButtonPreviousMixMode";
             this.gradientButtonPreviousMixMode.Size = new System.Drawing.Size(23, 41);
             this.gradientButtonPreviousMixMode.TabIndex = 55;
@@ -287,7 +319,7 @@ namespace Rainbow.UI
             // 
             this.pictureBoxMixMode.BackColor = System.Drawing.Color.Black;
             this.pictureBoxMixMode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxMixMode.Location = new System.Drawing.Point(97, 13);
+            this.pictureBoxMixMode.Location = new System.Drawing.Point(81, 13);
             this.pictureBoxMixMode.Name = "pictureBoxMixMode";
             this.pictureBoxMixMode.Size = new System.Drawing.Size(128, 100);
             this.pictureBoxMixMode.TabIndex = 50;
@@ -300,11 +332,11 @@ namespace Rainbow.UI
             this.labelMixMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.labelMixMode.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelMixMode.ForeColor = System.Drawing.Color.White;
-            this.labelMixMode.Location = new System.Drawing.Point(34, 113);
+            this.labelMixMode.Location = new System.Drawing.Point(7, 113);
             this.labelMixMode.Name = "labelMixMode";
-            this.labelMixMode.Size = new System.Drawing.Size(232, 30);
+            this.labelMixMode.Size = new System.Drawing.Size(178, 30);
             this.labelMixMode.TabIndex = 54;
-            this.labelMixMode.Text = "Alternate Squared (20X)";
+            this.labelMixMode.Text = "Alt. Squared (20X)";
             // 
             // panelSound2
             // 
@@ -428,9 +460,9 @@ namespace Rainbow.UI
             this.panelRepeatPart.Controls.Add(this.label6);
             this.panelRepeatPart.Controls.Add(this.labelRepeatEnd);
             this.panelRepeatPart.Controls.Add(this.label5);
-            this.panelRepeatPart.Location = new System.Drawing.Point(568, 298);
+            this.panelRepeatPart.Location = new System.Drawing.Point(473, 298);
             this.panelRepeatPart.Name = "panelRepeatPart";
-            this.panelRepeatPart.Size = new System.Drawing.Size(330, 77);
+            this.panelRepeatPart.Size = new System.Drawing.Size(305, 77);
             this.panelRepeatPart.TabIndex = 45;
             // 
             // panelStretchMode
@@ -441,9 +473,9 @@ namespace Rainbow.UI
             this.panelStretchMode.Controls.Add(this.gradientButtonPreviousStretchMode);
             this.panelStretchMode.Controls.Add(this.pictureBoxStretchMode);
             this.panelStretchMode.Controls.Add(this.labelStretchMode);
-            this.panelStretchMode.Location = new System.Drawing.Point(12, 221);
+            this.panelStretchMode.Location = new System.Drawing.Point(11, 221);
             this.panelStretchMode.Name = "panelStretchMode";
-            this.panelStretchMode.Size = new System.Drawing.Size(273, 154);
+            this.panelStretchMode.Size = new System.Drawing.Size(226, 154);
             this.panelStretchMode.TabIndex = 44;
             // 
             // gradientButtonNextStretchMode
@@ -452,7 +484,7 @@ namespace Rainbow.UI
             this.gradientButtonNextStretchMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.gradientButtonNextStretchMode.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.gradientButtonNextStretchMode.HorizontalGradient = false;
-            this.gradientButtonNextStretchMode.Location = new System.Drawing.Point(54, 47);
+            this.gradientButtonNextStretchMode.Location = new System.Drawing.Point(39, 47);
             this.gradientButtonNextStretchMode.Name = "gradientButtonNextStretchMode";
             this.gradientButtonNextStretchMode.Size = new System.Drawing.Size(23, 41);
             this.gradientButtonNextStretchMode.TabIndex = 56;
@@ -466,7 +498,7 @@ namespace Rainbow.UI
             this.gradientButtonPreviousStretchMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.gradientButtonPreviousStretchMode.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.gradientButtonPreviousStretchMode.HorizontalGradient = false;
-            this.gradientButtonPreviousStretchMode.Location = new System.Drawing.Point(25, 47);
+            this.gradientButtonPreviousStretchMode.Location = new System.Drawing.Point(10, 47);
             this.gradientButtonPreviousStretchMode.Name = "gradientButtonPreviousStretchMode";
             this.gradientButtonPreviousStretchMode.Size = new System.Drawing.Size(23, 41);
             this.gradientButtonPreviousStretchMode.TabIndex = 55;
@@ -478,7 +510,7 @@ namespace Rainbow.UI
             // 
             this.pictureBoxStretchMode.BackColor = System.Drawing.Color.Black;
             this.pictureBoxStretchMode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxStretchMode.Location = new System.Drawing.Point(98, 17);
+            this.pictureBoxStretchMode.Location = new System.Drawing.Point(80, 17);
             this.pictureBoxStretchMode.Name = "pictureBoxStretchMode";
             this.pictureBoxStretchMode.Size = new System.Drawing.Size(128, 100);
             this.pictureBoxStretchMode.TabIndex = 50;
@@ -491,7 +523,7 @@ namespace Rainbow.UI
             this.labelStretchMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.labelStretchMode.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelStretchMode.ForeColor = System.Drawing.Color.White;
-            this.labelStretchMode.Location = new System.Drawing.Point(92, 116);
+            this.labelStretchMode.Location = new System.Drawing.Point(10, 117);
             this.labelStretchMode.Name = "labelStretchMode";
             this.labelStretchMode.Size = new System.Drawing.Size(131, 30);
             this.labelStretchMode.TabIndex = 54;
@@ -620,7 +652,7 @@ namespace Rainbow.UI
             this.panelPreset.ForeColor = System.Drawing.SystemColors.ControlText;
             this.panelPreset.Location = new System.Drawing.Point(70, 9);
             this.panelPreset.Name = "panelPreset";
-            this.panelPreset.Size = new System.Drawing.Size(635, 60);
+            this.panelPreset.Size = new System.Drawing.Size(670, 60);
             this.panelPreset.TabIndex = 42;
             // 
             // gradientButtonAddPreset
@@ -700,7 +732,7 @@ namespace Rainbow.UI
             this.buttonSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSettings.ForeColor = System.Drawing.Color.IndianRed;
             this.buttonSettings.Image = global::Rainbow.Properties.Resources.cogwheel;
-            this.buttonSettings.Location = new System.Drawing.Point(845, 9);
+            this.buttonSettings.Location = new System.Drawing.Point(843, 9);
             this.buttonSettings.Name = "buttonSettings";
             this.buttonSettings.Size = new System.Drawing.Size(51, 49);
             this.buttonSettings.TabIndex = 41;
@@ -715,14 +747,14 @@ namespace Rainbow.UI
             this.panelDuration.Controls.Add(this.labelDuration);
             this.panelDuration.Controls.Add(this.label1);
             this.panelDuration.Controls.Add(this.label12);
-            this.panelDuration.Location = new System.Drawing.Point(568, 221);
+            this.panelDuration.Location = new System.Drawing.Point(473, 221);
             this.panelDuration.Name = "panelDuration";
-            this.panelDuration.Size = new System.Drawing.Size(330, 71);
+            this.panelDuration.Size = new System.Drawing.Size(305, 71);
             this.panelDuration.TabIndex = 49;
             // 
             // pictureBoxDuration
             // 
-            this.pictureBoxDuration.Location = new System.Drawing.Point(32, 28);
+            this.pictureBoxDuration.Location = new System.Drawing.Point(7, 28);
             this.pictureBoxDuration.Name = "pictureBoxDuration";
             this.pictureBoxDuration.Size = new System.Drawing.Size(208, 31);
             this.pictureBoxDuration.TabIndex = 52;
@@ -737,7 +769,7 @@ namespace Rainbow.UI
             this.labelDuration.AutoSize = true;
             this.labelDuration.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.labelDuration.ForeColor = System.Drawing.Color.White;
-            this.labelDuration.Location = new System.Drawing.Point(247, 26);
+            this.labelDuration.Location = new System.Drawing.Point(222, 26);
             this.labelDuration.Name = "labelDuration";
             this.labelDuration.Size = new System.Drawing.Size(41, 15);
             this.labelDuration.TabIndex = 51;
@@ -759,7 +791,7 @@ namespace Rainbow.UI
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label12.ForeColor = System.Drawing.Color.Silver;
-            this.label12.Location = new System.Drawing.Point(247, 44);
+            this.label12.Location = new System.Drawing.Point(222, 44);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(50, 15);
             this.label12.TabIndex = 48;
@@ -783,7 +815,7 @@ namespace Rainbow.UI
             this.label14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.label14.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label14.ForeColor = System.Drawing.Color.Silver;
-            this.label14.Location = new System.Drawing.Point(288, 196);
+            this.label14.Location = new System.Drawing.Point(242, 196);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(79, 21);
             this.label14.TabIndex = 53;
@@ -939,5 +971,7 @@ namespace Rainbow.UI
         private CustomControls.GradientButton gradientButtonPreviousSound2;
         private System.Windows.Forms.Button buttonPlay1;
         private System.Windows.Forms.Button buttonPlay2;
+        private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.Button buttonPlay;
     }
 }
