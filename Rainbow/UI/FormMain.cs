@@ -100,7 +100,7 @@ namespace Rainbow.UI
 
         public void setWaveFile1(string name, string category)
         {
-            CategoryItem item = WaveFiles.Find(x => x.Name.Equals(name) && x.Category.Equals(category));
+            CategoryItem item = WaveFiles.Find(x => x.Name.ToUpper().Equals(name.ToUpper()) && x.Category.ToUpper().Equals(category.ToUpper()));
             if (item!=null)
             {
                 CurrentWaveFile1 = item;
@@ -113,7 +113,7 @@ namespace Rainbow.UI
 
         public void setWaveFile2(string name, string category)
         {
-            CategoryItem item = WaveFiles.Find(x => x.Name.Equals(name) && x.Category.Equals(category));
+            CategoryItem item = WaveFiles.Find(x => x.Name.ToUpper().Equals(name.ToUpper()) && x.Category.ToUpper().Equals(category.ToUpper()));
             if (item != null)
             {
                 CurrentWaveFile2 = item;

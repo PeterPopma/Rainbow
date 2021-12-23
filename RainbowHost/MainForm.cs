@@ -82,10 +82,9 @@ namespace RainbowHost
             PluginListVw.Items[0].Selected = true;
             PluginListVw.Items[0].EnsureVisible();
             ViewPluginBtn.PerformClick();
-            */
-            String pluginPath = @"E:\Projects\Rainbow\Rainbow\bin\x64\Debug\net5.0-windows\deploy\Rainbow.dll";
-//            VstPluginContext ctx = OpenPlugin(Directory.GetCurrentDirectory() + "\\Rainbow.dll");
-            VstPluginContext ctx = OpenPlugin(pluginPath);
+            */ 
+            VstPluginContext ctx = OpenPlugin(Directory.GetCurrentDirectory() + "\\Rainbow.dll");     // use if building release
+//            VstPluginContext ctx = OpenPlugin(@"E:\Projects\Rainbow\Rainbow\bin\x64\Debug\net5.0-windows\deploy\Rainbow.dll"); // use if debugging
 
             if (ctx != null)
             {
