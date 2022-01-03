@@ -46,6 +46,10 @@ namespace Rainbow.UI
             LoadPresets();
             UpdateMixMode();
             UpdateStretchMode();
+            if (SynthGenerator.SavedPreset != null)
+            {
+                SetPreset(SynthGenerator.SavedPreset);
+            }
         }
 
         /// <summary>
@@ -419,6 +423,7 @@ namespace Rainbow.UI
             try
             {
                 Preset.Load(this, SynthGenerator, DataFolder, name);
+                synthGenerator.SavedPreset = name;
             }
             catch (Exception)
             {
@@ -441,29 +446,35 @@ namespace Rainbow.UI
 
         private void LoadSettings()
         {
-            RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Peter Popma\\Rainbow");
-            if (key != null)
+            if (Registry.CurrentUser!=null)
             {
-                DataFolder = (key.GetValue("DataFolder") == null ? Directory.GetCurrentDirectory() : key.GetValue("DataFolder").ToString());
-                synthGenerator.SamplesPerSecondOutput = key.GetValue("SamplesPerSecond") == null ? 44100 : Convert.ToInt32(key.GetValue("SamplesPerSecond"));
-                synthGenerator.BitsPerSample = key.GetValue("BitsPerSample") == null ? 32 : Convert.ToInt32(key.GetValue("BitsPerSample"));
+                RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Peter Popma\\Rainbow");
+                if (key != null) {
+                    DataFolder = (key.GetValue("DataFolder") == null ? Directory.GetCurrentDirectory() : key.GetValue("DataFolder").ToString());
+                    synthGenerator.SamplesPerSecondOutput = key.GetValue("SamplesPerSecond") == null ? 44100 : Convert.ToInt32(key.GetValue("SamplesPerSecond"));
+                    synthGenerator.BitsPerSample = key.GetValue("BitsPerSample") == null ? 32 : Convert.ToInt32(key.GetValue("BitsPerSample"));
+                }
+
+                return;
             }
-            else
-            {
-                DataFolder = Directory.GetCurrentDirectory();
-                synthGenerator.SamplesPerSecondOutput = 44100;
-                synthGenerator.BitsPerSample = 32;
-            }
+
+            // fallback solution
+            DataFolder = Directory.GetCurrentDirectory();
+            synthGenerator.SamplesPerSecondOutput = 44100;
+            synthGenerator.BitsPerSample = 32;
         }
 
         public void SaveSettings()
         {
-            // Create or get existing subkey
-            RegistryKey key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Peter Popma\\Rainbow");
+            if (Registry.CurrentUser!=null)
+            {
+                // Create or get existing subkey
+                RegistryKey key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Peter Popma\\Rainbow");
 
-            key.SetValue("DataFolder", DataFolder);
-            key.SetValue("SamplesPerSecond", synthGenerator.SamplesPerSecondOutput);
-            key.SetValue("BitsPerSample", synthGenerator.BitsPerSample);
+                key.SetValue("DataFolder", DataFolder);
+                key.SetValue("SamplesPerSecond", synthGenerator.SamplesPerSecondOutput);
+                key.SetValue("BitsPerSample", synthGenerator.BitsPerSample);
+            }
         }
 
         private void labelPreset_MouseMove(object sender, MouseEventArgs e)

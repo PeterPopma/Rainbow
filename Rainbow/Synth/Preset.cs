@@ -21,6 +21,10 @@ namespace Rainbow.Synth
 
         public void Save(FormMain formMain, SynthGenerator synthGenerator, CategoryItem presetItem)
         {
+            if (formMain.CurrentWaveFile1==null || formMain.CurrentWaveFile2==null)
+            {
+                return;     // no valid data -> datafolder maybe pointing to wrong location
+            }
             if (presetItem.Name.Length == 0)
             {
                 presetItem.Name = "default";

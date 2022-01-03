@@ -1,2 +1,4 @@
-bin
 obj
+/Rainbow/bin
+/RainbowHost/bin
+/Rainbow/Properties/launchSettings.json

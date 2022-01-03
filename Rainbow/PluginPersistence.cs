@@ -2,16 +2,19 @@
 {
     using Jacobi.Vst.Core;
     using Jacobi.Vst.Plugin.Framework;
+    using Rainbow.Synth;
     using System;
     using System.IO;
     using System.Text;
 
     internal sealed class PluginPersistence : IVstPluginPersistence
     {
+        private SynthGenerator synthGenerator;
         private readonly Encoding _encoding = Encoding.ASCII;
 
-        public PluginPersistence()
+        public PluginPersistence(SynthGenerator synthGenerator)
         {
+            this.synthGenerator = synthGenerator ?? throw new ArgumentNullException(nameof(synthGenerator));
         }
 
         #region IVstPluginPersistence Members
@@ -25,14 +28,16 @@
         {
             var reader = new BinaryReader(stream, _encoding);
 
-            int count = reader.ReadInt32();
+            synthGenerator.SavedPreset = reader.ReadString();
         }
 
         public void WritePrograms(Stream stream, VstProgramCollection programs)
         {
             var writer = new BinaryWriter(stream, _encoding);
-
-//            writer.Write(_noteMap.Count);
+            if (synthGenerator.SavedPreset != null)
+            {
+                writer.Write(synthGenerator.SavedPreset);
+            }
         }
 
         #endregion

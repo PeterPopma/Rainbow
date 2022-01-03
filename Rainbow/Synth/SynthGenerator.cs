@@ -10,6 +10,7 @@ namespace Rainbow.Synth
 {
     class SynthGenerator
     {
+        string savedPreset;
         WaveInfo waveInfo = new WaveInfo();
         private int samplesPerSecondInternal = 44100;
         private int samplesPerSecondOutput = 44100;
@@ -40,6 +41,7 @@ namespace Rainbow.Synth
         public int NumMixWaves { get => numMixWaves; set => numMixWaves = value; }
         public int BitsPerSample { get => bitsPerSample; set => bitsPerSample = value; }
         public int SamplesPerSecondOutput { get => samplesPerSecondOutput; set => samplesPerSecondOutput = value; }
+        public string SavedPreset { get => savedPreset; set => savedPreset = value; }
 
         public SynthGenerator()
         {
