@@ -51,7 +51,7 @@ namespace Rainbow.UI
             {
                 CategoryItem presetItem = new CategoryItem(textBoxPresetName.Text, category);
                 myParent.Presets.Add(presetItem);
-                myParent.CurrentPreset = presetItem;
+                myParent.SynthGenerator.CurrentPresetName = presetItem.Name;
                 myParent.labelPreset.Text = presetItem.Name;
                 myParent.Preset.Save(myParent, myParent.SynthGenerator, presetItem);
 

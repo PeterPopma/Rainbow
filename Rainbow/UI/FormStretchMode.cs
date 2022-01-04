@@ -52,28 +52,28 @@ namespace Rainbow.UI
 
         private void pictureBoxOverlap_Click(object sender, EventArgs e)
         {
-            myParent.SynthGenerator.StretchMode = 0;
+            myParent.SynthGenerator.SetStretchMode(0);
             myParent.UpdateStretchMode();
             Close();
         }
 
         private void pictureBoxStretchToLargest_Click(object sender, EventArgs e)
         {
-            myParent.SynthGenerator.StretchMode = 2;
+            myParent.SynthGenerator.SetStretchMode(2);
             myParent.UpdateStretchMode();
             Close();
         }
 
         private void pictureBoxShrinkToSmallest_Click(object sender, EventArgs e)
         {
-            myParent.SynthGenerator.StretchMode = 3;
+            myParent.SynthGenerator.SetStretchMode(3);
             myParent.UpdateStretchMode();
             Close();
         }
 
         private void pictureBoxRepeatSmallest_Click(object sender, EventArgs e)
         {
-            myParent.SynthGenerator.StretchMode = 1;
+            myParent.SynthGenerator.SetStretchMode(1);
             myParent.UpdateStretchMode();
             Close();
         }

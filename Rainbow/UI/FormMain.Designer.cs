@@ -37,7 +37,7 @@ namespace Rainbow.UI
             this.labelRepeatEnd = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.labelWaveFile = new System.Windows.Forms.Label();
+            this.labelWaveFile1 = new System.Windows.Forms.Label();
             this.labelPreset = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.pictureBoxTitle = new System.Windows.Forms.PictureBox();
@@ -56,7 +56,7 @@ namespace Rainbow.UI
             this.checkBoxInvert2 = new System.Windows.Forms.CheckBox();
             this.pictureBoxVolume2 = new System.Windows.Forms.PictureBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.labelSecondary = new System.Windows.Forms.Label();
+            this.labelWaveFile2 = new System.Windows.Forms.Label();
             this.panelRepeatPart = new System.Windows.Forms.Panel();
             this.panelStretchMode = new System.Windows.Forms.Panel();
             this.gradientButtonNextStretchMode = new Rainbow.CustomControls.GradientButton();
@@ -174,19 +174,19 @@ namespace Rainbow.UI
             this.label6.TabIndex = 19;
             this.label6.Text = "end:";
             // 
-            // labelWaveFile
+            // labelWaveFile1
             // 
-            this.labelWaveFile.AutoSize = true;
-            this.labelWaveFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.labelWaveFile.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.labelWaveFile.ForeColor = System.Drawing.Color.White;
-            this.labelWaveFile.Location = new System.Drawing.Point(82, 44);
-            this.labelWaveFile.Name = "labelWaveFile";
-            this.labelWaveFile.Size = new System.Drawing.Size(89, 30);
-            this.labelWaveFile.TabIndex = 23;
-            this.labelWaveFile.Text = "Sound 1";
-            this.labelWaveFile.Click += new System.EventHandler(this.labelWaveFile_Click);
-            this.labelWaveFile.MouseMove += new System.Windows.Forms.MouseEventHandler(this.labelWaveFile_MouseMove);
+            this.labelWaveFile1.AutoSize = true;
+            this.labelWaveFile1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.labelWaveFile1.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelWaveFile1.ForeColor = System.Drawing.Color.White;
+            this.labelWaveFile1.Location = new System.Drawing.Point(82, 44);
+            this.labelWaveFile1.Name = "labelWaveFile1";
+            this.labelWaveFile1.Size = new System.Drawing.Size(89, 30);
+            this.labelWaveFile1.TabIndex = 23;
+            this.labelWaveFile1.Text = "Sound 1";
+            this.labelWaveFile1.Click += new System.EventHandler(this.labelWaveFile_Click);
+            this.labelWaveFile1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.labelWaveFile_MouseMove);
             // 
             // labelPreset
             // 
@@ -324,7 +324,7 @@ namespace Rainbow.UI
             this.pictureBoxMixMode.Size = new System.Drawing.Size(128, 100);
             this.pictureBoxMixMode.TabIndex = 50;
             this.pictureBoxMixMode.TabStop = false;
-            this.pictureBoxMixMode.Click += new System.EventHandler(this.pictureBoxMixMode_Click_1);
+            this.pictureBoxMixMode.Click += new System.EventHandler(this.pictureBoxMixMode_Click);
             // 
             // labelMixMode
             // 
@@ -348,12 +348,11 @@ namespace Rainbow.UI
             this.panelSound2.Controls.Add(this.checkBoxInvert2);
             this.panelSound2.Controls.Add(this.pictureBoxVolume2);
             this.panelSound2.Controls.Add(this.label11);
-            this.panelSound2.Controls.Add(this.labelSecondary);
+            this.panelSound2.Controls.Add(this.labelWaveFile2);
             this.panelSound2.Location = new System.Drawing.Point(458, 99);
             this.panelSound2.Name = "panelSound2";
             this.panelSound2.Size = new System.Drawing.Size(441, 94);
             this.panelSound2.TabIndex = 46;
-            this.panelSound2.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSecondarySound_Paint);
             this.panelSound2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelSecondarySound_MouseClick);
             // 
             // buttonPlay2
@@ -436,19 +435,19 @@ namespace Rainbow.UI
             this.label11.TabIndex = 49;
             this.label11.Text = "Volume";
             // 
-            // labelSecondary
+            // labelWaveFile2
             // 
-            this.labelSecondary.AutoSize = true;
-            this.labelSecondary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.labelSecondary.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.labelSecondary.ForeColor = System.Drawing.Color.White;
-            this.labelSecondary.Location = new System.Drawing.Point(83, 45);
-            this.labelSecondary.Name = "labelSecondary";
-            this.labelSecondary.Size = new System.Drawing.Size(89, 30);
-            this.labelSecondary.TabIndex = 23;
-            this.labelSecondary.Text = "Sound 2";
-            this.labelSecondary.Click += new System.EventHandler(this.labelSecondary_Click);
-            this.labelSecondary.MouseMove += new System.Windows.Forms.MouseEventHandler(this.labelSecondary_MouseMove);
+            this.labelWaveFile2.AutoSize = true;
+            this.labelWaveFile2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.labelWaveFile2.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelWaveFile2.ForeColor = System.Drawing.Color.White;
+            this.labelWaveFile2.Location = new System.Drawing.Point(83, 45);
+            this.labelWaveFile2.Name = "labelWaveFile2";
+            this.labelWaveFile2.Size = new System.Drawing.Size(89, 30);
+            this.labelWaveFile2.TabIndex = 23;
+            this.labelWaveFile2.Text = "Sound 2";
+            this.labelWaveFile2.Click += new System.EventHandler(this.labelSecondary_Click);
+            this.labelWaveFile2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.labelSecondary_MouseMove);
             // 
             // panelRepeatPart
             // 
@@ -515,7 +514,7 @@ namespace Rainbow.UI
             this.pictureBoxStretchMode.Size = new System.Drawing.Size(128, 100);
             this.pictureBoxStretchMode.TabIndex = 50;
             this.pictureBoxStretchMode.TabStop = false;
-            this.pictureBoxStretchMode.Click += new System.EventHandler(this.pictureBoxMixMode_Click);
+            this.pictureBoxStretchMode.Click += new System.EventHandler(this.pictureBoxStretchMode_Click);
             // 
             // labelStretchMode
             // 
@@ -550,13 +549,12 @@ namespace Rainbow.UI
             this.panelSound1.Controls.Add(this.checkBoxInvert1);
             this.panelSound1.Controls.Add(this.pictureBoxVolume1);
             this.panelSound1.Controls.Add(this.label7);
-            this.panelSound1.Controls.Add(this.labelWaveFile);
+            this.panelSound1.Controls.Add(this.labelWaveFile1);
             this.panelSound1.Controls.Add(this.buttonPlay1);
             this.panelSound1.Location = new System.Drawing.Point(12, 99);
             this.panelSound1.Name = "panelSound1";
             this.panelSound1.Size = new System.Drawing.Size(441, 94);
             this.panelSound1.TabIndex = 43;
-            this.panelSound1.Paint += new System.Windows.Forms.PaintEventHandler(this.panelBaseSound_Paint);
             this.panelSound1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelBaseSound_MouseClick);
             // 
             // gradientButtonNextSound1
@@ -929,7 +927,7 @@ namespace Rainbow.UI
         private CustomControls.GradientButton gradientButtonPresetSave;
         private CustomControls.GradientButton gradientButtonPresetDelete;
         private System.Windows.Forms.Panel panel1;
-        internal System.Windows.Forms.Label labelWaveFile;
+        internal System.Windows.Forms.Label labelWaveFile1;
         internal System.Windows.Forms.Label labelPreset;
         private System.Windows.Forms.Button buttonSettings;
         private System.Windows.Forms.Panel panelSound1;
@@ -941,7 +939,7 @@ namespace Rainbow.UI
         private System.Windows.Forms.Panel panelSound2;
         private CustomControls.GradientButton gradientButtonNextSecondary;
         private CustomControls.GradientButton gradientButtonPreviousSecondary;
-        internal System.Windows.Forms.Label labelSecondary;
+        internal System.Windows.Forms.Label labelWaveFile2;
         private System.Windows.Forms.Panel panelRepeatPart;
         internal System.Windows.Forms.PictureBox pictureBoxVolume1;
         private System.Windows.Forms.Label label7;

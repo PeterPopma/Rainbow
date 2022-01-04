@@ -62,7 +62,8 @@ namespace Rainbow.UI
         {
             GradientButton2 myButton = (GradientButton2)sender;
             Cursor = Cursors.WaitCursor;
-            myParent.SetPreset(myButton.Text);
+            myParent.SynthGenerator.LoadPreset(myButton.Text);
+            myParent.UpdatePresetControls();
             Cursor = Cursors.Default;
             Close();
         }

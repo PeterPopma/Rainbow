@@ -17,16 +17,12 @@ namespace Rainbow.UI
     internal sealed partial class FormMain : UserControl
     {
         Preset preset = new Preset();
-        private string dataFolder = "";
         SynthGenerator synthGenerator;
         bool changingRepeatBegin = false;
         bool changingRepeatEnd = false;
         bool changingDuration = false;
-        CategoryItem currentWaveFile1;
-        CategoryItem currentWaveFile2;
         List<CategoryItem> waveFiles = new List<CategoryItem>();
         List<CategoryItem> presets = new List<CategoryItem>();
-        CategoryItem currentPreset = new CategoryItem("Preset1", "");
 
         /// <summary>
         /// Constructs a new instance.
@@ -39,36 +35,25 @@ namespace Rainbow.UI
         public void Initialize()
         {
             SynthGenerator.Initialize();
-            LoadSettings();
             UpdateWavefilesList();
-            UpdateRepeatUI();
             panel1.Paint += new PaintEventHandler(GroupBoxPaint);
             LoadPresets();
-            UpdateMixMode();
-            UpdateStretchMode();
-            if (SynthGenerator.SavedPreset != null)
-            {
-                SetPreset(SynthGenerator.SavedPreset);
-            }
+            UpdatePresetControls();
         }
 
         /// <summary>
         /// Contains a queue with note-on note numbers currently playing.
         /// </summary>
         internal SynthGenerator SynthGenerator { get => synthGenerator; set => synthGenerator = value; }
-        internal Preset Preset { get => Preset1; set => Preset1 = value; }
-        public CategoryItem CurrentPreset { get => currentPreset; set => currentPreset = value; }
+        internal Preset Preset { get => preset; set => preset = value; }
         public List<CategoryItem> Presets { get => presets; set => presets = value; }
-        internal Preset Preset1 { get => preset; set => preset = value; }
-        public string DataFolder { get => dataFolder; set => dataFolder = value; }
-        public CategoryItem CurrentWaveFile1 { get => currentWaveFile1; set => currentWaveFile1 = value; }
-        public CategoryItem CurrentWaveFile2 { get => currentWaveFile2; set => currentWaveFile2 = value; }
+
         public List<CategoryItem> WaveFiles { get => waveFiles; set => waveFiles = value; }
 
         public void ReloadPresets()
         {
             Presets.Clear();
-            currentPreset = new CategoryItem("Preset1", "");
+            synthGenerator.CurrentPresetName = "Preset1";
             LoadPresets();
         }
 
@@ -77,54 +62,26 @@ namespace Rainbow.UI
             // find all presets
             try
             {
-                string[] fileEntries = Directory.GetFiles(DataFolder + "\\presets\\");
+                string[] fileEntries = Directory.GetFiles(synthGenerator.DataFolder + "\\presets\\");
                 foreach (string fileName in fileEntries)
                 {
                     if (fileName.EndsWith(".pst"))
                     {
-                        string name = fileName.Substring(DataFolder.Length+9, fileName.Length - DataFolder.Length - 13);
-                        string category = Preset.ReadCategory(dataFolder, name);
+                        string name = fileName.Substring(synthGenerator.DataFolder.Length+9, fileName.Length - synthGenerator.DataFolder.Length - 13);
+                        string category = Preset.ReadCategory(synthGenerator.DataFolder, name);
                         CategoryItem presetItem = new CategoryItem(name, category);
                         Presets.Add(presetItem);
-                        if (currentPreset.Name.Equals("Preset1"))        // set first preset
+                        if (synthGenerator.CurrentPresetName.Equals("Preset1"))        // set first preset
                         {
-                            currentPreset = presetItem;
-                            Preset.Load(this, SynthGenerator, dataFolder, name);
+                            synthGenerator.LoadPreset(presetItem.Name);
+                            UpdatePresetControls();
                         }
                     }
                 }
-                labelPreset.Text = currentPreset.Name;
-
             }
             catch (System.IO.DirectoryNotFoundException)
             {
-                Directory.CreateDirectory(DataFolder + "\\presets");
-            }
-        }
-
-        public void setWaveFile1(string name, string category)
-        {
-            CategoryItem item = WaveFiles.Find(x => x.Name.ToUpper().Equals(name.ToUpper()) && x.Category.ToUpper().Equals(category.ToUpper()));
-            if (item!=null)
-            {
-                CurrentWaveFile1 = item;
-            }
-            else
-            {
-                int error = 1;
-            }
-        }
-
-        public void setWaveFile2(string name, string category)
-        {
-            CategoryItem item = WaveFiles.Find(x => x.Name.ToUpper().Equals(name.ToUpper()) && x.Category.ToUpper().Equals(category.ToUpper()));
-            if (item != null)
-            {
-                CurrentWaveFile2 = item;
-            }
-            else
-            {
-                int error = 1;
+                Directory.CreateDirectory(synthGenerator.DataFolder + "\\presets");
             }
         }
 
@@ -134,21 +91,21 @@ namespace Rainbow.UI
             // find all wavefiles
             try
             {
-                string[] fileEntries = Directory.GetFiles(DataFolder + "\\wavefiles\\");
+                string[] fileEntries = Directory.GetFiles(synthGenerator.DataFolder + "\\wavefiles\\");
                 foreach (string fileName in fileEntries)
                 {
                     if (fileName.EndsWith(".wav"))
                     {
 
-                        string wavefile = fileName.Substring(DataFolder.Length + 11);
+                        string wavefile = fileName.Substring(synthGenerator.DataFolder.Length + 11);
                         wavefile = wavefile.Substring(0, wavefile.Length - 4);
                         waveFiles.Add(new CategoryItem(wavefile, "[none]"));
                     }
                 }
 
-                string[] directories = Directory.GetDirectories(DataFolder + "\\wavefiles\\");
+                string[] directories = Directory.GetDirectories(synthGenerator.DataFolder + "\\wavefiles\\");
                 foreach (string directory in directories) {
-                    string dirname = directory.Substring(DataFolder.Length + 11);
+                    string dirname = directory.Substring(synthGenerator.DataFolder.Length + 11);
                     fileEntries = Directory.GetFiles(directory + "\\");
                     foreach (string fileName in fileEntries)
                     {
@@ -166,12 +123,11 @@ namespace Rainbow.UI
                 Directory.CreateDirectory("wavefiles");
             }
 
-            if (waveFiles.Count>0)
+            if (synthGenerator.CurrentWaveFile1 == null && waveFiles.Count > 0)
             {
                 setWaveFile1(waveFiles[0]);
-                setWaveFile2(waveFiles[0]);
             }
-            if (waveFiles.Count > 1)
+            if (synthGenerator.CurrentWaveFile2 == null && waveFiles.Count > 1)
             {
                 setWaveFile2(waveFiles[1]);
             }
@@ -202,30 +158,19 @@ namespace Rainbow.UI
             }
         }
 
-        private string GetWaveFileName(CategoryItem waveFile)
-        {
-            if(waveFile.Category.Equals("[none]"))
-                return dataFolder + "\\wavefiles\\" + waveFile.Name + ".wav";
-            else
-                return dataFolder + "\\wavefiles\\" + waveFile.Category + "\\" + waveFile.Name + ".wav";
-        }
-
         public void setWaveFile1(CategoryItem waveFile)
         {
-            CurrentWaveFile1 = waveFile;
-            labelWaveFile.Text = CurrentWaveFile1.Name;
-
-            synthGenerator.LoadWaveFile(GetWaveFileName(waveFile), 1);
-            UpdateStretchMode();
-            //this.Focus();
-            //labelDataFolder.Select();
+            synthGenerator.CurrentWaveFile1 = waveFile;
+            synthGenerator.LoadWaveFile(waveFile, 1);
+            synthGenerator.UpdateEffects();
+            labelWaveFile1.Text = waveFile.Name;
         }
         public void setWaveFile2(CategoryItem waveFile)
         {
-            CurrentWaveFile2 = waveFile;
-            labelSecondary.Text = CurrentWaveFile2.Name;
-            synthGenerator.LoadWaveFile(GetWaveFileName(waveFile), 2);
-            UpdateStretchMode();
+            synthGenerator.CurrentWaveFile2 = waveFile;
+            synthGenerator.LoadWaveFile(waveFile, 2);
+            synthGenerator.UpdateEffects();
+            labelWaveFile2.Text = waveFile.Name;
         }
 
         public void UpdateRepeatUI()
@@ -326,6 +271,7 @@ namespace Rainbow.UI
             if (changingDuration && x >= pictureBoxDuration.Width/20.0 && x <= pictureBoxDuration.Width)
             {
                 synthGenerator.Duration = synthGenerator.MaxDuration * (x / (float)pictureBoxDuration.Width);
+                synthGenerator.UpdateSoundBufferSize();
                 synthGenerator.UpdateEffects();
                 UpdateDurationUI();
             }
@@ -337,24 +283,14 @@ namespace Rainbow.UI
             changingRepeatEnd = false;
         }
 
-        private void gradientButtonSelectWave_Click(object sender, EventArgs e)
-        {
-            FormWaves formWaves = new FormWaves();
-            formWaves.MyParent = this;
-            Point location = this.PointToScreen(Point.Empty);
-            formWaves.Location = new Point(location.X + 10, location.Y + 10);
-
-            formWaves.ShowDialog();
-        }
-
         private void labelWaveFile_MouseMove(object sender, MouseEventArgs e)
         {
-            labelWaveFile.Cursor = Cursors.Hand;
+            labelWaveFile1.Cursor = Cursors.Hand;
         }
 
         private void gradientButtonNextWave_Click(object sender, EventArgs e)
         {
-            int index = WaveFiles.IndexOf(WaveFiles.Find(x => x.Equals(CurrentWaveFile1)));
+            int index = WaveFiles.IndexOf(WaveFiles.Find(x => x.Equals(synthGenerator.CurrentWaveFile1)));
             index++;
             if (index> WaveFiles.Count-1)
             {
@@ -366,7 +302,7 @@ namespace Rainbow.UI
 
         private void gradientButtonPreviousWave_Click(object sender, EventArgs e)
         {
-            int index = WaveFiles.IndexOf(WaveFiles.Find(x => x.Equals(CurrentWaveFile1)));
+            int index = WaveFiles.IndexOf(WaveFiles.Find(x => x.Equals(synthGenerator.CurrentWaveFile1)));
             index--;
             if (index < 0)
             {
@@ -395,9 +331,9 @@ namespace Rainbow.UI
 
         private void gradientButtonPresetSave_Click(object sender, EventArgs e)
         {
-            if (CurrentPreset != null && CurrentPreset.Name.Length > 0)
+            if (synthGenerator.CurrentPresetName != null && synthGenerator.CurrentPresetName.Length > 0)
             {
-                Preset.Save(this, synthGenerator, CurrentPreset);
+                Preset.Save(this, synthGenerator, FindPresetByName(synthGenerator.CurrentPresetName));
             }
         }
 
@@ -410,59 +346,27 @@ namespace Rainbow.UI
                 Presets.Remove(FindPresetByName(labelPreset.Text));
                 if (Presets.Count > 0)
                 {
-                    Preset.Load(this, synthGenerator, dataFolder, Presets[0].Name);
-                    labelPreset.Text = Presets[0].Name;
+                    synthGenerator.LoadPreset(Presets[0].Name);
+                    UpdatePresetControls();
                 }
-            }
-        }
-
-        public void SetPreset(string name)
-        {
-            CurrentPreset = FindPresetByName(name);
-            
-            try
-            {
-                Preset.Load(this, SynthGenerator, DataFolder, name);
-                synthGenerator.SavedPreset = name;
-            }
-            catch (Exception)
-            {
-
             }
         }
 
         public void UpdatePresetControls()
         {
-            labelPreset.Text = CurrentPreset.Name;
-            setWaveFile1(CurrentWaveFile1);
-            setWaveFile2(CurrentWaveFile2);
-            UpdateRepeatUI();
+            labelPreset.Text = synthGenerator.CurrentPresetName;
+            labelWaveFile1.Text = synthGenerator.CurrentWaveFile1.Name;
+            labelWaveFile2.Text = synthGenerator.CurrentWaveFile2.Name;
             pictureBoxVolume1.Refresh();
             pictureBoxVolume2.Refresh();
-            UpdateMixMode();
             checkBoxInvert1.Checked = synthGenerator.WaveInfo.Inverted1;
             checkBoxInvert2.Checked = synthGenerator.WaveInfo.Inverted2;
+            UpdateMixMode();
+            UpdateStretchMode();
+            UpdateRepeatUI();
+            UpdateDurationUI();
         }
 
-        private void LoadSettings()
-        {
-            if (Registry.CurrentUser!=null)
-            {
-                RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Peter Popma\\Rainbow");
-                if (key != null) {
-                    DataFolder = (key.GetValue("DataFolder") == null ? Directory.GetCurrentDirectory() : key.GetValue("DataFolder").ToString());
-                    synthGenerator.SamplesPerSecondOutput = key.GetValue("SamplesPerSecond") == null ? 44100 : Convert.ToInt32(key.GetValue("SamplesPerSecond"));
-                    synthGenerator.BitsPerSample = key.GetValue("BitsPerSample") == null ? 32 : Convert.ToInt32(key.GetValue("BitsPerSample"));
-                }
-
-                return;
-            }
-
-            // fallback solution
-            DataFolder = Directory.GetCurrentDirectory();
-            synthGenerator.SamplesPerSecondOutput = 44100;
-            synthGenerator.BitsPerSample = 32;
-        }
 
         public void SaveSettings()
         {
@@ -471,7 +375,7 @@ namespace Rainbow.UI
                 // Create or get existing subkey
                 RegistryKey key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Peter Popma\\Rainbow");
 
-                key.SetValue("DataFolder", DataFolder);
+                key.SetValue("DataFolder", synthGenerator.DataFolder);
                 key.SetValue("SamplesPerSecond", synthGenerator.SamplesPerSecondOutput);
                 key.SetValue("BitsPerSample", synthGenerator.BitsPerSample);
             }
@@ -533,32 +437,32 @@ namespace Rainbow.UI
 
         private void gradientButtonNextPreset_Click(object sender, EventArgs e)
         {
-            int index = presets.IndexOf(presets.Find(x => x.Equals(CurrentPreset)));
+            int index = presets.IndexOf(presets.Find(x => x.Name.Equals(synthGenerator.CurrentPresetName)));
             index++;
             if (index > presets.Count - 1)
             {
                 index = 0;
             }
-            string currentPreset = presets[index].Name;
-            SetPreset(currentPreset);
+            synthGenerator.LoadPreset(presets[index].Name);
+            UpdatePresetControls();
         }
 
         private void gradientButtonPreviousPreset_Click(object sender, EventArgs e)
         {
-            int index = presets.IndexOf(presets.Find(x => x.Equals(CurrentPreset)));
+            int index = presets.IndexOf(presets.Find(x => x.Name.Equals(synthGenerator.CurrentPresetName)));
             index--;
             if (index < 0)
             {
                 index = presets.Count - 1;
             }
-            string currentPreset = presets[index].Name;
-            SetPreset(currentPreset);
+            synthGenerator.LoadPreset(presets[index].Name);
+            UpdatePresetControls();
         }
 
 
         private void labelSecondary_MouseMove(object sender, MouseEventArgs e)
         {
-            labelSecondary.Cursor = Cursors.Hand;
+            labelWaveFile2.Cursor = Cursors.Hand;
         }
 
         private void labelSecondary_Click(object sender, EventArgs e)
@@ -574,7 +478,7 @@ namespace Rainbow.UI
 
         private void gradientButtonNextSecondary_Click(object sender, EventArgs e)
         {
-            int index = WaveFiles.IndexOf(WaveFiles.Find(x => x.Equals(CurrentWaveFile2)));
+            int index = WaveFiles.IndexOf(WaveFiles.Find(x => x.Equals(synthGenerator.CurrentWaveFile2)));
             index++;
             if (index > WaveFiles.Count - 1)
             {
@@ -586,7 +490,7 @@ namespace Rainbow.UI
 
         private void gradientButtonPreviousSecondary_Click(object sender, EventArgs e)
         {
-            int index = WaveFiles.IndexOf(WaveFiles.Find(x => x.Equals(CurrentWaveFile2)));
+            int index = WaveFiles.IndexOf(WaveFiles.Find(x => x.Equals(synthGenerator.CurrentWaveFile2)));
             index--;
             if (index < 0)
             {
@@ -661,16 +565,6 @@ namespace Rainbow.UI
             }
         }
 
-        private void panelBaseSound_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void panelSecondarySound_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void pictureBoxVolume2_Click(object sender, EventArgs e)
         {
             FormVolume formVolume = new FormVolume();
@@ -714,7 +608,7 @@ namespace Rainbow.UI
             pictureBoxVolume2.Cursor = Cursors.Hand;
         }
 
-        private void pictureBoxMixMode_Click(object sender, EventArgs e)
+        private void pictureBoxStretchMode_Click(object sender, EventArgs e)
         {
             FormStretchMode formStretchMode = new FormStretchMode();
             formStretchMode.MyParent = this;
@@ -723,11 +617,7 @@ namespace Rainbow.UI
 
         private void gradientButtonNextMixMode_Click(object sender, EventArgs e)
         {
-            synthGenerator.MixMode++;
-            if (synthGenerator.MixMode>5)
-            {
-                synthGenerator.MixMode = 0;
-            }
+            synthGenerator.NextMixMode();
             UpdateMixMode();
         }
 
@@ -760,8 +650,7 @@ namespace Rainbow.UI
                     pictureBoxMixMode.Image = Properties.Resources.alternatesine;
                     break;
             }
-            synthGenerator.UpdateEffects();
-        }
+         }
 
         public void UpdateStretchMode()
         {
@@ -784,38 +673,33 @@ namespace Rainbow.UI
                     pictureBoxStretchMode.Image = Properties.Resources.shrinktosmallest;
                     break;
             }
+        }
+
+        public void SetStretchMode()
+        {
+
+        }
+
+        public void SetDuration()
+        {
             synthGenerator.UpdateSoundBufferSize();
-            pictureBoxDuration.Refresh();
-            labelDuration.Text = synthGenerator.Duration.ToString("0.000");
         }
 
         private void gradientButtonPreviousMixMode_Click(object sender, EventArgs e)
         {
-            synthGenerator.MixMode--;
-            if (synthGenerator.MixMode < 0)
-            {
-                synthGenerator.MixMode = 5;
-            }
+            synthGenerator.PreviousMixMode();
             UpdateMixMode();
         }
 
         private void gradientButtonPreviousStretchMode_Click(object sender, EventArgs e)
         {
-            synthGenerator.StretchMode--;
-            if (synthGenerator.StretchMode < 0)
-            {
-                synthGenerator.StretchMode = 3;
-            }
+            synthGenerator.PreviousStretchMode();
             UpdateStretchMode();
         }
 
         private void gradientButtonNextStretchMode_Click(object sender, EventArgs e)
         {
-            synthGenerator.StretchMode++;
-            if (synthGenerator.StretchMode > 3)
-            {
-                synthGenerator.StretchMode = 0;
-            }
+            synthGenerator.NextStretchMode();
             UpdateStretchMode();
         }
 
@@ -867,7 +751,7 @@ namespace Rainbow.UI
             UpdateDurationValue(e.X);
         }
 
-        private void pictureBoxMixMode_Click_1(object sender, EventArgs e)
+        private void pictureBoxMixMode_Click(object sender, EventArgs e)
         {
             FormMixMode formMixMode = new FormMixMode();
             formMixMode.MyParent = this;
@@ -887,13 +771,13 @@ namespace Rainbow.UI
         private void buttonPlay1_Click(object sender, EventArgs e)
         {
            
-            SoundPlayer wavFile = new SoundPlayer(GetWaveFileName(currentWaveFile1));
+            SoundPlayer wavFile = new SoundPlayer(synthGenerator.GetWaveFileName(synthGenerator.CurrentWaveFile1));
             wavFile.Play();
         }
 
         private void buttonPlay2_Click(object sender, EventArgs e)
         {
-            SoundPlayer wavFile = new SoundPlayer(GetWaveFileName(currentWaveFile2));
+            SoundPlayer wavFile = new SoundPlayer(synthGenerator.GetWaveFileName(synthGenerator.CurrentWaveFile2));
             wavFile.Play();
         }
 

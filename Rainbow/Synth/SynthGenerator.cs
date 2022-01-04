@@ -1,4 +1,5 @@
 ﻿using Jacobi.Vst.Core;
+using Microsoft.Win32;
 using Rainbow.UI;
 using Rainbow.Wave;
 using System;
@@ -11,6 +12,7 @@ namespace Rainbow.Synth
     class SynthGenerator
     {
         string savedPreset;
+        Preset preset = new Preset();
         WaveInfo waveInfo = new WaveInfo();
         private int samplesPerSecondInternal = 44100;
         private int samplesPerSecondOutput = 44100;
@@ -27,6 +29,11 @@ namespace Rainbow.Synth
         private int numMixWaves = 1; 
         private int stretchMode;
         private int soundBufferSize;
+        private string dataFolder = "";
+
+        CategoryItem currentWaveFile1 = null;
+        CategoryItem currentWaveFile2 = null;
+        string currentPresetName = "Preset1";
 
         internal WaveInfo WaveInfo { get => waveInfo; set => waveInfo = value; }
         internal FormMain? MainView { get; set; }
@@ -41,14 +48,20 @@ namespace Rainbow.Synth
         public int NumMixWaves { get => numMixWaves; set => numMixWaves = value; }
         public int BitsPerSample { get => bitsPerSample; set => bitsPerSample = value; }
         public int SamplesPerSecondOutput { get => samplesPerSecondOutput; set => samplesPerSecondOutput = value; }
+        public string CurrentPresetName { get => currentPresetName; set => currentPresetName = value; }
+        public CategoryItem CurrentWaveFile1 { get => currentWaveFile1; set => currentWaveFile1 = value; }
+        public CategoryItem CurrentWaveFile2 { get => currentWaveFile2; set => currentWaveFile2 = value; }
+        public string DataFolder { get => dataFolder; set => dataFolder = value; }
         public string SavedPreset { get => savedPreset; set => savedPreset = value; }
 
         public SynthGenerator()
         {
+            LoadSettings();
         }
 
         public void Initialize()
         {
+
             waveInfo.ShapeVolume1 = new int[SHAPE_NUMPOINTS];
             for(int k=0; k<SHAPE_NUMPOINTS; k++)
             {
@@ -59,7 +72,43 @@ namespace Rainbow.Synth
             {
                 waveInfo.ShapeVolume2[k] = SHAPE_MAX_VALUE;
             }
+        }
 
+        private void LoadSettings()
+        {
+            if (Registry.CurrentUser != null)
+            {
+                RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Peter Popma\\Rainbow");
+                if (key != null)
+                {
+                    DataFolder = (key.GetValue("DataFolder") == null ? Directory.GetCurrentDirectory() : key.GetValue("DataFolder").ToString());
+                    SamplesPerSecondOutput = key.GetValue("SamplesPerSecond") == null ? 44100 : Convert.ToInt32(key.GetValue("SamplesPerSecond"));
+                    BitsPerSample = key.GetValue("BitsPerSample") == null ? 32 : Convert.ToInt32(key.GetValue("BitsPerSample"));
+                }
+
+                return;
+            }
+
+            // fallback solution
+            DataFolder = Directory.GetCurrentDirectory();
+            SamplesPerSecondOutput = 44100;
+            BitsPerSample = 32;
+        }
+
+        public void LoadPreset(string name)
+        {
+            CurrentPresetName = name;
+            try
+            {
+                preset.Load(this, CurrentPresetName);
+                LoadWaveFile(CurrentWaveFile1, 1);
+                LoadWaveFile(CurrentWaveFile2, 2);
+                UpdateEffects();
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         public void NoteOff(byte tone)
@@ -77,9 +126,78 @@ namespace Rainbow.Synth
             Notes.Add(note);
         }
 
-        public void LoadWaveFile(string wavefileName, int soundNumber)
+        public string GetWaveFileName(CategoryItem waveFile)
         {
-            WaveFile.LoadFromDisk(wavefileName, waveInfo, samplesPerSecondInternal, soundNumber);
+            if (waveFile.Category.Equals("[none]"))
+                return DataFolder + "\\wavefiles\\" + waveFile.Name + ".wav";
+            else
+                return DataFolder + "\\wavefiles\\" + waveFile.Category + "\\" + waveFile.Name + ".wav";
+        }
+
+        public void LoadWaveFile(CategoryItem waveFile, int soundNumber)
+        {
+            WaveFile.LoadFromDisk(GetWaveFileName(waveFile), waveInfo, samplesPerSecondInternal, soundNumber);
+            UpdateSoundBufferSize();
+        }
+
+        public void SetMixMode(int mixMode, int numMixWaves=-1)
+        {
+            MixMode = mixMode;
+            if (numMixWaves>=0)
+            {
+                NumMixWaves = numMixWaves;
+            }
+            MixMode = mixMode;
+            UpdateEffects();
+        }
+
+        public void NextMixMode()
+        {
+            MixMode++;
+            if (MixMode > 5)
+            {
+                MixMode = 0;
+            }
+            UpdateEffects();
+        }
+
+        public void PreviousMixMode()
+        {
+            MixMode--;
+            if (MixMode < 0)
+            {
+                MixMode = 5;
+            }
+            UpdateEffects();
+        }
+
+        public void SetStretchMode(int stretchMode)
+        {
+            StretchMode = stretchMode;
+            UpdateSoundBufferSize();
+            UpdateEffects();
+        }
+
+        public void NextStretchMode()
+        {
+            StretchMode++;
+            if (StretchMode > 3)
+            {
+                StretchMode = 0;
+            }
+            UpdateSoundBufferSize();
+            UpdateEffects();
+        }
+
+        public void PreviousStretchMode()
+        {
+            StretchMode--;
+            if (StretchMode < 0)
+            {
+                StretchMode = 3;
+            }
+            UpdateSoundBufferSize();
+            UpdateEffects();
         }
 
         // call when Preset settings changed (but when .wav files change, call LoadWaveFile first)
@@ -121,7 +239,6 @@ namespace Rainbow.Synth
             float seconds = soundBufferSize / (float)samplesPerSecondInternal;
             duration = seconds;
             maxDuration = duration * 3;
-            UpdateEffects();
         }
 
         // resize the soundbuffers

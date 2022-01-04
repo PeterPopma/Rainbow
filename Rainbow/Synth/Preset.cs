@@ -21,7 +21,7 @@ namespace Rainbow.Synth
 
         public void Save(FormMain formMain, SynthGenerator synthGenerator, CategoryItem presetItem)
         {
-            if (formMain.CurrentWaveFile1==null || formMain.CurrentWaveFile2==null)
+            if (synthGenerator.CurrentWaveFile1==null || synthGenerator.CurrentWaveFile2==null)
             {
                 return;     // no valid data -> datafolder maybe pointing to wrong location
             }
@@ -34,13 +34,13 @@ namespace Rainbow.Synth
                 presetItem.Category = "[default]";
             }
             using (System.IO.StreamWriter file =
-                new System.IO.StreamWriter(formMain.DataFolder + "\\presets\\" + presetItem.Name + ".pst"))
+                new System.IO.StreamWriter(synthGenerator.DataFolder + "\\presets\\" + presetItem.Name + ".pst"))
             {
                 file.WriteLine(presetItem.Category);
-                file.WriteLine(formMain.CurrentWaveFile1.Name);
-                file.WriteLine(formMain.CurrentWaveFile1.Category);
-                file.WriteLine(formMain.CurrentWaveFile2.Name);
-                file.WriteLine(formMain.CurrentWaveFile2.Category);
+                file.WriteLine(synthGenerator.CurrentWaveFile1.Name);
+                file.WriteLine(synthGenerator.CurrentWaveFile1.Category);
+                file.WriteLine(synthGenerator.CurrentWaveFile2.Name);
+                file.WriteLine(synthGenerator.CurrentWaveFile2.Category);
                 file.WriteLine(synthGenerator.RepeatBegin.ToString(providerDecimalPoint));
                 file.WriteLine(synthGenerator.RepeatEnd.ToString(providerDecimalPoint));
                 file.WriteLine(synthGenerator.WaveInfo.ShapeVolume1.Length);
@@ -71,17 +71,13 @@ namespace Rainbow.Synth
             }
         }
 
-        public void Load(FormMain formMain, SynthGenerator synthGenerator, string dataFolder, string name)
+        public void Load(SynthGenerator synthGenerator, string name)
         {
-            using (StreamReader srFile = new StreamReader(dataFolder + "\\presets\\" + name + ".pst"))
+            using (StreamReader srFile = new StreamReader(synthGenerator.DataFolder + "\\presets\\" + name + ".pst"))
             {
                 srFile.ReadLine();      // preset category we don't need to know when loading
-                string waveName = srFile.ReadLine();
-                string waveCategory = srFile.ReadLine();
-                formMain.setWaveFile1(waveName, waveCategory);
-                waveName = srFile.ReadLine();
-                waveCategory = srFile.ReadLine();
-                formMain.setWaveFile2(waveName, waveCategory);
+                synthGenerator.CurrentWaveFile1 = new CategoryItem(srFile.ReadLine() , srFile.ReadLine());
+                synthGenerator.CurrentWaveFile2 = new CategoryItem(srFile.ReadLine(), srFile.ReadLine());
                 synthGenerator.RepeatBegin = double.Parse(srFile.ReadLine(), providerDecimalPoint);
                 synthGenerator.RepeatEnd = double.Parse(srFile.ReadLine(), providerDecimalPoint);
                 int length = int.Parse(srFile.ReadLine());
@@ -101,10 +97,8 @@ namespace Rainbow.Synth
                 synthGenerator.StretchMode = int.Parse(srFile.ReadLine());
                 synthGenerator.MixMode = int.Parse(srFile.ReadLine());
                 synthGenerator.NumMixWaves = int.Parse(srFile.ReadLine());
-                formMain.UpdatePresetControls();
                 synthGenerator.Duration = double.Parse(srFile.ReadLine());
                 synthGenerator.MaxDuration = double.Parse(srFile.ReadLine());
-                formMain.UpdateDurationUI();    // (max)duration is set by UpdatePresetControls(), so must be updated seperately.
             }
         }
 

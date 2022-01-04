@@ -27,16 +27,16 @@
         public void ReadPrograms(Stream stream, VstProgramCollection programs)
         {
             var reader = new BinaryReader(stream, _encoding);
-
             synthGenerator.SavedPreset = reader.ReadString();
+            synthGenerator.LoadPreset(synthGenerator.SavedPreset);
         }
 
         public void WritePrograms(Stream stream, VstProgramCollection programs)
         {
             var writer = new BinaryWriter(stream, _encoding);
-            if (synthGenerator.SavedPreset != null)
+            if (synthGenerator.CurrentPresetName != null)
             {
-                writer.Write(synthGenerator.SavedPreset);
+                writer.Write(synthGenerator.CurrentPresetName);
             }
         }
 
